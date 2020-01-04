@@ -1,0 +1,21 @@
+body {
+    font-family:  Arial;
+    margin: auto;
+    position: relative;
+
+  }
+  
+  text {
+    font-family:  Arial;
+    font: 10px sans-serif;
+  }
+  
+  form {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+.nameText {
+  font-family: 'Arial'
+}

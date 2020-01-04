@@ -1,0 +1,653 @@
+
+    Leitsatz: [{"name": "Human-Centered Complex Systems"}],
+    Profs: [
+        {
+            "name": "Softwarekonstruktion",
+            "details": ["Prof. A B","Verfahren abgeschlossen","Möglicher Link"],
+            "kooperationen": ["Philosophie", "TUHH", "HAW", "Projekt AB"],
+            "profname": "Prof. A B",
+            "status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Verteilte Systeme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Angew. Softwaretechnik",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Sicherheit",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1) Sicherheit/ Sicherheitsmanagement",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Rechennetze",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Theoretische Inf.",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1) Theoretische Inf.)",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1)Informatikbildung)",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1) Mobile Services",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Informatik",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Wiss. Rechnen (DKRZ)",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Wiss. Visualisierung (Direktor RRZ)",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Daten Enginieering",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Simulation & Visualisierung",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Alg. Molekulares Design",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1) Angewandte Bioinf.",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Rechnerg. Bioinformatik",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Maschinelles Lernen",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Autonome Systeme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Sem. Systeme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Wissenstechnologien",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Signalverarbeitung",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Bildverarbeitung",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Assistenzsysteme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Sprachverarbeitung",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Sprachtechnologie",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Multimodale Systeme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Mensch-Computer-Interaktion",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Usability & Softwareergonomie",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Ethik in der Informationstechnik",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "IT-Gestaltung",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Wirtschaftsinformatik",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Betriebssystem",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "(W1TT) Adaptive Systeme",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "IT Management",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Digital Technochange",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        },
+        {
+            "name": "Datenbanken",
+            "profname": "Prof. A B",
+            "p_status": "Verfahren abgeschlossen",
+            "weiteres": "Möglicher Link"
+        }
+    ],
+
+    Forschunsbereiche: [
+        {
+            "name": "Computing in Science / Data Science",
+            "f_professuren": [
+                {"f_p_name": "Professur A"},
+                {"f_p_name": "Professur B"},
+                {"f_p_name": "Professur C"},
+                {"f_p_name": "Professur D"},
+                {"f_p_name": "Professur E"},
+                {"f_p_name": "Professur F"}],
+            "sontiges" : "link"
+            },
+        {
+            "name": "Information Governance Technology",
+            "f_professuren": [
+                {"f_p_name": "Professur A"},
+                {"f_p_name": "Professur B"},
+                {"f_p_name": "Professur C"},
+                {"f_p_name": "Professur D"},
+                {"f_p_name": "Professur E"},
+                {"f_p_name": "Professur F"}],
+            "sontiges" : "link"
+            },
+        {
+            "name": "Cognitive Systems",
+            "f_professuren": [
+                {"f_p_name": "Professur A"},
+                {"f_p_name": "Professur B"},
+                {"f_p_name": "Professur C"},
+                {"f_p_name": "Professur D"},
+                {"f_p_name": "Professur E"},
+                {"f_p_name": "Professur F"}],
+                "sontiges" : "link"
+        }
+        
+
+    ],
+    Studiengänge : [  
+        {
+            "name": "Wirtschaftsinformatik",
+            "s_art": "BSc/MSc",
+            "website": "link"
+        },
+        {
+            "name": "Software-System- Entwicklung",
+            "s_art": "BSc/MSc",
+            "website": "link"
+        },
+        {
+            "name": "Lehramtsstudiengänge",
+            "s_art": "",
+            "website": "link"
+        },
+        {
+            "name": "Bioinformatik",
+            "s_art": "MSc",
+            "website": "link"
+        },
+        {
+            "name": "Computing in Science",
+            "s_art": "BSc",
+            "website": "link"
+        },
+        {
+            "name": "Intelligent Adaptive Systems",
+            "s_art": "MSc International",
+            "website": "link"
+        },
+        {
+            "name": "Mensch-Computer- Interaktion",
+            "s_art": "BSc",
+            "website": "link"
+        },
+        {
+            "name": "Informatik",
+            "s_art": "BSc/MSc",
+            "website": "link"
+        },
+        {
+            "name": "IT-Management & Consulting",
+            "s_art": "MSc",
+            "website": "link"
+        }
+
+    ],
+    InKoop : [
+        {
+            "name": "Wirtschafts- und Sozialwissenschaften",
+            "details": "(Wirtschaftsinformatik)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "KNU",
+            "details": "(Ethik)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Rechtswissenschaften",
+            "details": "ITG",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Regionales Rechenzentrum",
+            "details": "RRZ",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Geowissenschaften",
+            "details": "CLISAP, DKRZ",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Biologie, Chemie, Physik",
+            "details": "(ZBH, BSc, CIS, MSc Bioinformatik)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Mathematik",
+            "details": "(Collatz Center)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Geistenwissenschaften",
+            "details": "(SFB Manuskriptkulturen, eHumanities)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Neurowissenschaften",
+            "details": "(TRR 169)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Psychologie",
+            "details": "(TRR 169, BSc MCI)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Philosophie",
+            "details": "(Ethik)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Friedensforschung - ZNF",
+            "details": "(Direktorium)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}, 
+        {
+            "name": "Betriebswirtschaftslehre",
+            "details": "(Wirtschaftsinformatik, ITMC)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}
+    ],
+    AuKoop : [
+        {
+            "name": "Kooperationsplatform ahoi.digital",
+            "details": "",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "HAW",
+            "details": "Informatik",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "HCU",
+            "details": "Geoinformatik",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Hamburg Open Online University",
+            "details": "",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Cluster",
+            "details": "Medien & IT, Luftfahrt, Gesundheitswirtschaft, Life Science",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "ThSI",
+            "details": "",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "DESY",
+            "details": "(GR ANTRAG)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Deutsches Klimarechenzentrum",
+            "details": "(DKRZ)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Nationale & internationale Kooperationen",
+            "details": "EU, DFG, BMBF, BWMI, ERASMUS+, LFF...",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Tsinghua University Beijing/ China",
+            "details": "(TRR 169)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Universiätätklinikum Eppendorf",
+            "details": "(TRR 169)",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Hans-Bredow-Institut",
+            "details": "",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "Kuratorium IT-Mgmt. & -Consulting",
+            "details": "",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]},
+        {
+            "name": "TUHH",
+            "details": "Informatik",
+            "k_partner": [
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"},
+                {"k_p_name": "Professur A"}
+        ]}
+    ],
+    Projekte: [
+        {
+            "name": "Projekt AB",
+            "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "pk_budget": 20000,
+            "pk_teilnehmer": [
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"}
+                ],
+            "sonstiges": "link z.B" 
+        }, 
+        {
+            "name": "Projekt BC",
+            "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "pk_budget": 20000,
+            "pk_teilnehmer": [
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"}
+                ],
+            "sonstiges": "link z.B" 
+        },  
+        {
+            "name": "Projekt CD",
+            "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "pk_budget": 20000,
+            "pk_teilnehmer": [
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"}
+                ],
+            "sonstiges": "link z.B" 
+        }, 
+        {
+            "name": "Projekt DE",
+            "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "pk_budget": 20000,
+            "pk_teilnehmer": [
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"},
+                {"pk_t_name": "Teilnehmer A"}
+                ],
+            "sonstiges": "link z.B" 
+        }
+    ]
+}
