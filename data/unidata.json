@@ -3,8 +3,7 @@
     "Profs": [
         {
             "name": "Softwarekonstruktion",
-            "details": ["Prof. A B","Verfahren abgeschlossen"],
-            "kooperationen": ["Philosophie", "TUHH", "HAW", "Projekt AB"],
+            "kooperationen": "Philosophie, TUHH, HAW, Projekt AB",
             "profname": "Prof. A B",
             "status": "Verfahren abgeschlossen",
             "link": "https://www.uni-hamburg.de/"

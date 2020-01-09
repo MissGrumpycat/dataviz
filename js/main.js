@@ -188,7 +188,7 @@ d3.json("./data/unidata.json").then(function(data){
             return d.data.kooperationen
             })
         .on('mouseover', tip.show)
-        .on('mouseout', tip.hide) //does this without an mouseout-ebent???
+        .on('mouseout', tip.hide) 
         //interaction highlight connections/ cooperations 
         .on('click', function(d) {
        
@@ -221,72 +221,80 @@ d3.json("./data/unidata.json").then(function(data){
         
 
         
-        //tooltipdetails
-        d3.select("#details").selectAll("#text").remove();
-        var i = 0;
-        var rowNumber = 0;
-        var lineLengthDictionary = [];
-        for ( var key in d.data){
-            lineLengthDictionary.push(Math.ceil(d.data["name"].length / 20));
-        }
-
-        for (var key in d.data) {
-
-            if (d.data[key] != "" && d.data[key] != null){
-                rowNumber = rowNumber + 1;
-                i = i + 1;
-                var lengthOfLine = d.data["name"].length/ 20;
-
-                var tooltipRow = tooltipDetails.append("g")
-                    .attr("transform", function(){
-                        if (rowNumber == 1 || lineLengthDictionary[rowNumber-1] > 1){
-                            return "translate(0, " + ((i * lengthOfLine) - 5) + ")" 
-                        } else {
-                           return "translate(0, " + (i * 20) + ")"  
-                        }
-                       
-                    });
-
+            //tooltipdetails
+            d3.select("#details").selectAll("#text").remove();
+            var i = 0;
+            var lineLengthDictionary = [];
+            for ( var key in d.data){
+                if(d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                  lineLengthDictionary.push(Math.ceil(d.data[key].length / 28.0));  
+                } else {
+                    lineLengthDictionary.push("0")
+                }
                 
+            }
+
             
-                tooltipRow.append("text")
-                    .attr("id", "text")
-                    .attr("x", -20)
-                    .attr("y", 15
-                   
-                    /*function(){
-                        if (key != "name"){
-                            //if (rowNumber == 2)
-                            return 8 * lengthOfLine;
-                            // else -20
-                        }}*/
-                    )
-                    .attr("text-anchor", "start")
-                    .style("font-size", "15px")
-                    .text("")
+            var hadTwoLines = function(){
+                var value;
+                for (var j = (i-1); j <= 0; j--){
+                    if (lineLengthDictionary[j] == 2) {
+                        value = true;
+                    }
+                return value;
+            }}
+
+
+            for (var key in d.data) {
+
+                if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                    i = i + 1;
+                    var tooltipRow = tooltipDetails.append("g")
+                        .attr("transform", function(){
+                            if (i - 1 != 0 && lineLengthDictionary[i-2] > 1){ //not headline and previous one more than one line
+                                //console.log(key + ":" + (((i-1) * 20) + 20))
+                                return "translate(0, " + ((((i-1) * 20) + 20)) + ")" //lineLengthDictionary[i-2]
+                            } else if (i - 1 != 0 && hadTwoLines() == true){
+                                //console.log(key + ":" + (((i-1) * 20) + 20))
+                                return "translate(0, " + ((((i-1) * 20) + 20)) + ")"
+                            } else if(i - 1 != 0) { //not the headline
+                                console.log(key + ": keine Doppellinie" +  (((i-1) * 20)))
+                                console.log(hadTwoLines())
+                               return "translate(0, " + (((i-1) * 20)) + ")"  
+                            }
+                        
+                        });
+              
+                    tooltipRow.append("text")
+                        .attr("id", "text")
+                        .attr("x", -20)
+                        .attr("y", 15)
+                        .attr("text-anchor", "start")
+                        .style("font-size", "15px")
+                        .text("")
                     ;  
 
-                tooltipRow.select("text")
-                            .style("font-size", function(){
-                                if (key == "name"){
-                                    return "20px";
-                                }else {
-                                    return "15px";
-                                }
-                            })
-                            .style("font-weight", function(){
-                                if (key == "name"){
-                                    return "600";
-                                
-                            }})
-                            .text(function(){
-                                    return d.data[key]               
-                            })
-                            .each(function(d){
-                                wrap(this, 220, 0)
-                            })
-            }
-        }}
+                    tooltipRow.select("text")
+                                .style("font-size", function(){
+                                    if (key == "name"){
+                                        return "20px";
+                                    }else {
+                                        return "15px";
+                                    }
+                                })
+                                .style("font-weight", function(){
+                                    if (key == "name"){
+                                        return "600";
+                                    
+                                }})
+                                .text(function(){
+                                        return d.data[key]               
+                                })
+                                .each(function(d){
+                                    wrap(this, 220, 0)
+                                })
+                }
+            }}
     )
     ;
 
