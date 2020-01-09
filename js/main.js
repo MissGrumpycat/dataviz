@@ -235,14 +235,15 @@ d3.json("./data/unidata.json").then(function(data){
             }
 
             
-            var hadTwoLines = function(){
-                var value;
-                for (var j = (i-1); j <= 0; j--){
-                    if (lineLengthDictionary[j] == 2) {
-                        value = true;
+            var hadTwoLines = function(i){
+                console.log(i)
+                for (var j = 0; j <= (i-1); j++){
+                    if (lineLengthDictionary[j] == 2) {                       
+                        return true;
                     }
-                return value;
-            }}
+            }
+            return false;
+        }
 
 
             for (var key in d.data) {
@@ -253,13 +254,14 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("transform", function(){
                             if (i - 1 != 0 && lineLengthDictionary[i-2] > 1){ //not headline and previous one more than one line
                                 //console.log(key + ":" + (((i-1) * 20) + 20))
-                                return "translate(0, " + ((((i-1) * 20) + 20)) + ")" //lineLengthDictionary[i-2]
-                            } else if (i - 1 != 0 && hadTwoLines() == true){
+                                return "translate(0, " + ((((i-1) * 20) + lineLengthDictionary[i-2])) + ")" //
+                            } else if (i - 1 != 0 && hadTwoLines(i) == true){ //
+                                console.log("hallo")
                                 //console.log(key + ":" + (((i-1) * 20) + 20))
-                                return "translate(0, " + ((((i-1) * 20) + 20)) + ")"
+                                return "translate(0, " + ((((i-1) * 20) + 30)) + ")"
                             } else if(i - 1 != 0) { //not the headline
                                 console.log(key + ": keine Doppellinie" +  (((i-1) * 20)))
-                                console.log(hadTwoLines())
+                                //console.log(hadTwoLines())
                                return "translate(0, " + (((i-1) * 20)) + ")"  
                             }
                         
