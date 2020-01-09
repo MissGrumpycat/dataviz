@@ -94,12 +94,8 @@ d3.json("./data/unidata.json").then(function(data){
                 .attr('class', 'd3-tip')
                 .html(function(d) {
                     var text = "<strong> <span style='color:white'>" + d.data.name + "</strong></span><br>" + "<br>";
-                    if (d.data.details!= null){
-                        text += d.data.details + "<br>"; 
-                        }
-                    if (d.data.link != null){
-                    text += d.data.link + "<br>"; 
-                    }                
+                    text += "Anklicken für mehr Info"; 
+                                   
                     return text;
                 });
 
@@ -133,10 +129,8 @@ d3.json("./data/unidata.json").then(function(data){
     //tooltipdetails
     var tooltipDetails = svg.append("g")
                             .attr("transform", "translate(450,-500)") 
-                            .attr('class', 'details')
-  
+                            .attr('id', 'details')
 
-    var i = 0;
 
 
     // the graph
@@ -197,6 +191,8 @@ d3.json("./data/unidata.json").then(function(data){
         .on('mouseout', tip.hide) //does this without an mouseout-ebent???
         //interaction highlight connections/ cooperations 
         .on('click', function(d) {
+       
+
             var current = d3.select(this).attr("name");
             var coops = d3.select(this).attr("coop");
             console.log(current); 
@@ -224,8 +220,10 @@ d3.json("./data/unidata.json").then(function(data){
 
         
 
-
+        
         //tooltipdetails
+        d3.select("#details").selectAll("#text").remove();
+        var i = 0;
         for (var key in d.data) {
             //console.log(key + ":" + d.data[key])
             
@@ -245,7 +243,7 @@ d3.json("./data/unidata.json").then(function(data){
             tooltipRow.select("text").text(function(){
                 return key + ":" + d.data[key]
                 })
-                }   
+                }  
             }
             
             
