@@ -224,30 +224,70 @@ d3.json("./data/unidata.json").then(function(data){
         //tooltipdetails
         d3.select("#details").selectAll("#text").remove();
         var i = 0;
+        var rowNumber = 0;
+        var lineLengthDictionary = [];
+        for ( var key in d.data){
+            lineLengthDictionary.push(Math.ceil(d.data["name"].length / 20));
+        }
+
         for (var key in d.data) {
-            //console.log(key + ":" + d.data[key])
-            
-            i = i + 1;
-            var tooltipRow = tooltipDetails.append("g")
-                .attr("transform", "translate(0, " + (i * 30) + ")");
-        
-            tooltipRow.append("text")
-                .attr("id", "text")
-                .attr("x", -20)
-                .attr("y", 15)
-                .attr("text-anchor", "start")
-                .style("font-size", "15px")
-                .text("")
-                ;
+
+            if (d.data[key] != "" && d.data[key] != null){
+                rowNumber = rowNumber + 1;
+                i = i + 1;
+                var lengthOfLine = d.data["name"].length/ 20;
+
+                var tooltipRow = tooltipDetails.append("g")
+                    .attr("transform", function(){
+                        if (rowNumber == 1 || lineLengthDictionary[rowNumber-1] > 1){
+                            return "translate(0, " + ((i * lengthOfLine) - 5) + ")" 
+                        } else {
+                           return "translate(0, " + (i * 20) + ")"  
+                        }
+                       
+                    });
+
                 
-            tooltipRow.select("text").text(function(){
-                return key + ":" + d.data[key]
-                })
-                }  
+            
+                tooltipRow.append("text")
+                    .attr("id", "text")
+                    .attr("x", -20)
+                    .attr("y", 15
+                   
+                    /*function(){
+                        if (key != "name"){
+                            //if (rowNumber == 2)
+                            return 8 * lengthOfLine;
+                            // else -20
+                        }}*/
+                    )
+                    .attr("text-anchor", "start")
+                    .style("font-size", "15px")
+                    .text("")
+                    ;  
+
+                tooltipRow.select("text")
+                            .style("font-size", function(){
+                                if (key == "name"){
+                                    return "20px";
+                                }else {
+                                    return "15px";
+                                }
+                            })
+                            .style("font-weight", function(){
+                                if (key == "name"){
+                                    return "600";
+                                
+                            }})
+                            .text(function(){
+                                    return d.data[key]               
+                            })
+                            .each(function(d){
+                                wrap(this, 220, 0)
+                            })
             }
-            
-            
-        )
+        }}
+    )
     ;
 
  
@@ -372,7 +412,6 @@ d3.json("./data/unidata.json").then(function(data){
                     return '10px';
                 }})
         .each(function(d) {
-            //console.log("each: " + d); // d is datum
             var lineNo = wrap(this, 180, d.ringIndex);
             arcLineCountDictionary[d.data.name] = lineNo;
         });
