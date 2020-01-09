@@ -254,7 +254,7 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("transform", function(){
                             if (i - 1 != 0 && lineLengthDictionary[i-2] > 1){ //not headline and previous one more than one line
                                 //console.log(key + ":" + (((i-1) * 20) + 20))
-                                return "translate(0, " + ((((i-1) * 20) + lineLengthDictionary[i-2])) + ")" //
+                                return "translate(0, " + ((((i-1) * 20) + 20)) + ")" //lineLengthDictionary[i-2]
                             } else if (i - 1 != 0 && hadTwoLines(i) == true){ //
                                 console.log("hallo")
                                 //console.log(key + ":" + (((i-1) * 20) + 20))
