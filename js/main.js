@@ -1,8 +1,26 @@
+var margin = { left:80, right:100, top:50, bottom:100 },
+    height = 1200 - margin.top - margin.bottom, 
+    width = 1280 - margin.left - margin.right,
+    cwidth = 50;
 
-// Shape of our pie chart
+/* Shape of the pie chart
 var width  = d3.select('#pie-chart').node().offsetWidth,
     height = 1200,
-    cwidth = 60;
+    cwidth = 60; */
+
+/* Select the SVG container using the select() method and inject the SVG element g using the append() method, also
+add labels */
+var svg = d3.select("#pie-chart svg")
+    .append("g")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("transform", "translate(" + 525 + "," + 450 + ")")
+    .append("g")
+
+/*gives the same numeric value to every object in the datafile (cuz they dont have numeric values)  
+Turn the pie chart 90 degrees counter clockwise, so it starts at the left*/     
+var pie = d3.pie()
+    .value(function(d){return 1}); 
 
 // Color stuff        
 var colorLeitsatz = '#3b515b';
@@ -37,7 +55,7 @@ var ringColorLegend_function = function(ring){
             return colorF;
         } 
 };
-
+// TO DO: zu einer funktion machen
 var color_function = function(i){
     switch (i) {
         case 0:
@@ -63,20 +81,6 @@ var color_function = function(i){
         } 
 };
 
-/*gives the same numeric value to every object in the datafile (cuz they dont have numeric values)  
-Turn the pie chart 90 degrees counter clockwise, so it starts at the left*/     
-var pie = d3.pie()
-    .value(function(d){return 1});
-
-/* Select the SVG container using the select() method and inject the SVG element g using the append() method, also
-add labels */
-var svg = d3.select("#pie-chart svg")
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    .append("g")
-    .attr("class", "labels");
-
-
 d3.json("./data/unidata.json").then(function(data){
     console.log(data);
     // create a new arc generator   
@@ -88,6 +92,8 @@ d3.json("./data/unidata.json").then(function(data){
                 .data(d3.values(data))
                 .enter()
                 .append("g")
+                .attr("transform", "translate(" + margin.left + 
+            ", " + margin.top + ")");
 
     // init tooltip
     var tip = d3.tip()
@@ -104,22 +110,32 @@ d3.json("./data/unidata.json").then(function(data){
 
     //Legend
     var legend = svg.append("g")
-                    .attr("transform", "translate(-450,-500)") // TO DO: no hardcoded numbers
-                    /*.attr("transform", "translate(" + (width - 10) + 
-                        "," + (height - 10) + ")");*/
+                    .attr("transform", "translate(" + (width - 1545) + 
+                        "," + (height - 1425) + ")");
+
+    var linesLegendCount;
 
     rings.forEach(function(ring, i){
         var legendRow = legend.append("g")
-            .attr("transform", "translate(0, " + (i * 30) + ")");
+            .attr("transform", "translate(" + 0 + " ," + (i * 40) + ")");
 
         legendRow.append("text")
-            .attr("x", -20)
-            .attr("y", 15)
-            .attr("text-anchor", "end")
+            .attr("text-anchor", "start")
             .style("font-size", "15px")
             .text(ring)
+            .each(function(d){ 
+                linesLegendCount = wrap(this, 200, 0)
+            })
+            .attr("x", 20)
+            .attr("y", function(){
+                if (linesLegendCount == 2){
+                    return 7;
+                }  
+                return 15;
+            })
             ;
         legendRow.append("rect")
+            .attr("x", -30)
             .attr("width", 20)
             .attr("height", 20)
             .attr("fill", ringColorLegend_function(ring)
@@ -127,12 +143,11 @@ d3.json("./data/unidata.json").then(function(data){
     });
 
     //tooltipdetails
-    var tooltipDetails = svg.append("g")
-                            .attr("transform", "translate(450,-500)") 
+    var tooltipDetails = svg.append("g") // 425, - 500
+                            .attr("transform", "translate(" + (width - 575) + 
+                            "," + (height - 1420) + ")")
                             .attr('id', 'details')
-
-
-
+                            
     // the graph
     /*takes all dataentries binded to a g (gs) and binds them to a path. every datapath gets also an ringIndex
     each arc/path will be filled according to the ringindex
@@ -185,7 +200,7 @@ d3.json("./data/unidata.json").then(function(data){
                 return d.data.name
             })
         .attr("coop", function(d) {
-            return d.data.kooperationen
+            return d.data.Kooperationspartner
             })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide) 
@@ -195,13 +210,15 @@ d3.json("./data/unidata.json").then(function(data){
 
             var current = d3.select(this).attr("name");
             var coops = d3.select(this).attr("coop");
-            console.log(current); 
+            //console.log(current); 
 
             // reset to normal                
             if (d3.select(this).style('opacity') == 0.3) {
                         d3.selectAll("path")
                             .style('opacity', 1);
+                        d3.selectAll(".nameText").style('opacity', 1);
                             return; }
+                        
 
             d3.selectAll("path")
                         .filter(function(d) {
@@ -215,53 +232,65 @@ d3.json("./data/unidata.json").then(function(data){
                                 return fadedArcs;
                             };
                         })
-                        .style('opacity', 0.3)
-        ; 
+                        .style('opacity', 0.3)    
+            ;  
 
-        
-
+            d3.selectAll(".nameText").filter(function(d){
+                if (coops != null){
+                var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
+                return fadedArcs;}
+                else {
+                    return d.data.name != current;
+                }
+            })
+            .style('opacity', 0.3)  
         
             //tooltipdetails
             d3.select("#details").selectAll("#text").remove();
             var i = 0;
-            var lineLengthDictionary = [];
-            for ( var key in d.data){
-                if(d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
-                  lineLengthDictionary.push(Math.ceil(d.data[key].length / 28.0));  
-                } else {
-                    lineLengthDictionary.push("0")
-                }
-                
-            }
+            var linesCount;
+            var lineCountDictionary = [];
 
-            
-            var hadTwoLines = function(i){
-                console.log(i)
-                for (var j = 0; j <= (i-1); j++){
-                    if (lineLengthDictionary[j] == 2) {                       
+            var hadMoreThanOneLiners = function(i){
+                for (var j = 0; j < i; j++){
+                    if (lineCountDictionary[j] >= 2) {                       
                         return true;
                     }
             }
             return false;
         }
-
-
+            
             for (var key in d.data) {
-
                 if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
                     i = i + 1;
+                    
                     var tooltipRow = tooltipDetails.append("g")
+                    // text formatting
                         .attr("transform", function(){
-                            if (i - 1 != 0 && lineLengthDictionary[i-2] > 1){ //not headline and previous one more than one line
-                                //console.log(key + ":" + (((i-1) * 20) + 20))
-                                return "translate(0, " + ((((i-1) * 20) + lineLengthDictionary[i-2])) + ")" 
-                            } else if (i - 1 != 0 && hadTwoLines(i) == true){ //
-                                console.log("hallo")
-                                //console.log(key + ":" + (((i-1) * 20) + 20))
-                                return "translate(0, " + ((((i-1) * 20) + 30)) + ")"
-                            } else if(i - 1 != 0) { //not the headline
-                                console.log(key + ": keine Doppellinie" +  (((i-1) * 20)))
-                                //console.log(hadTwoLines())
+                            if //check if there has been a multiliner in headline
+                            (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
+                                //console.log( key + " headline was twoliner")
+                                return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"} 
+                            else if //previous one more than one line and two line headline
+                                (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
+                                    //console.log( key + " previous had more lines and two line headline")
+                                    return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")"
+                                } else if //check if there has been a multiliner and headline two liner
+                            (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
+                                //console.log( key + " any line before was Moreliner and twoline headline")
+                                return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
+
+                            } else if //previous one more than one line
+                            (lineCountDictionary[i-2] > 1){ 
+                                //console.log( key + " previous had more lines")
+                                return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")" 
+                            } else if //check if there has been a multiliner
+                            (hadMoreThanOneLiners(i) == true){ 
+                                //console.log( key + " any line before was Moreliner")
+                                return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")"
+                            } else if //not the headline and no multliners
+                            (i - 1 != 0) { 
+                               //console.log( key + " simple")
                                return "translate(0, " + (((i-1) * 20)) + ")"  
                             }
                         
@@ -279,30 +308,45 @@ d3.json("./data/unidata.json").then(function(data){
                     tooltipRow.select("text")
                                 .style("font-size", function(){
                                     if (key == "name"){
-                                        return "20px";
+                                        return "18px";
                                     }else {
                                         return "15px";
                                     }
                                 })
+                                .attr("fill", function() {
+                                    if (key == "name"){
+                                        return color_function(d.ringIndex);
+                                    }})
                                 .style("font-weight", function(){
                                     if (key == "name"){
                                         return "600";
                                     
                                 }})
                                 .text(function(){
+                                        if (key == "Kooperationspartner"){
+                                            return key + ": " + d.data[key]   
+                                        }
                                         return d.data[key]               
                                 })
                                 .each(function(d){
-                                    wrap(this, 220, 0)
+                                    linesCount = wrap(this, 250, 0)
+                                    //console.log( key + linesCount)
+                                    lineCountDictionary.push(linesCount);
                                 })
                 }
-            }}
+            
+        }
+        //tooltipDetails.append("svg:a").attr("xlink:href", function(d){ return "generic.php?url=" + d.data.link })
+        //.html('<a href= "'+ d.data.link +'" target="_blank">' +"</a>")
+            
+    } 
+           
     )
     ;
 
  
 
-    // Invisible arc
+    // Invisible arc to prevent text on standing on its head
     gs.selectAll("hiddenPath")
         .data(function(d,i) {       
             return pie(d).map(function(e){e.ringIndex = i; return e});
@@ -311,7 +355,6 @@ d3.json("./data/unidata.json").then(function(data){
         .append("path")
         .attr("class", "textArc")
         .attr("id", function(d,i) { 
-            // We do not use textArc ids yet but might be useful in the long run
             return d.data.name + "textArc_"+i; 
         }) //Unique id for each hidden slice
         .attr("d", 
@@ -320,7 +363,6 @@ d3.json("./data/unidata.json").then(function(data){
                 var radius = arcIndexDictionary[d.data.name + "nameArc_"+i];
                 // Place the hidden arc
                 var newHiddenArc = arc.innerRadius(radius).outerRadius(radius)(d);
-
                 //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2) 
                 //flip the end and start position
                 var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
@@ -347,7 +389,7 @@ d3.json("./data/unidata.json").then(function(data){
         )
         .attr("fill", "none");
 
-
+    var lineNumber;
         
     // text wrap function
     function wrap(text2, width, ringIndex) {
@@ -380,7 +422,7 @@ d3.json("./data/unidata.json").then(function(data){
         return lineNumber + 1;
     }
 
-
+    
 
     // Placing text
     gs.selectAll(".nameText")
@@ -411,6 +453,7 @@ d3.json("./data/unidata.json").then(function(data){
                     return "17%"; // TO DO: not a hardcoded number? textlength matters
                 return "25%";
             })
+            
         
         .text(function(d, i, array){ 
             if (d.ringIndex > 0)
@@ -418,11 +461,12 @@ d3.json("./data/unidata.json").then(function(data){
         })
             .style('font-family', 'arial')
             .attr('font-size', function(d){
-                if(d.ringIndex > 1){return '15px'} else {
-                    return '10px';
+                if(d.ringIndex > 1){return '14px'} else {
+                    return '9px';
                 }})
+            
         .each(function(d) {
-            var lineNo = wrap(this, 180, d.ringIndex);
+            var lineNo = wrap(this, 150, d.ringIndex);
             arcLineCountDictionary[d.data.name] = lineNo;
         });
 
@@ -451,17 +495,17 @@ d3.json("./data/unidata.json").then(function(data){
                 {return 2 * lineCount};
         }
         });
-
+    
+    // middle text
     gs.append("text")
         .attr("text-anchor", "middle")
         .attr('font-size', '0.8em')
         .attr('font-family', 'arial')
         .style('fill', 'white')
-        .text("Human-Centered")
-        .append('tspan')
-        .text("Complex Systems")
-            .attr('dy', '1.25em')
-            .attr('dx','-7.75em')
+        .text("Human-Centered Complex Systems")
+        .each(function(d){ 
+            lineCount = wrap(this, 100, 0)
+        })
 })
 
 
