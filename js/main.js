@@ -3,13 +3,6 @@ var margin = { left:80, right:100, top:50, bottom:100 },
     width = 1280 - margin.left - margin.right,
     cwidth = 50;
 
-/* Shape of the pie chart
-var width  = d3.select('#pie-chart').node().offsetWidth,
-    height = 1200,
-    cwidth = 60; */
-
-/* Select the SVG container using the select() method and inject the SVG element g using the append() method, also
-add labels */
 var svg = d3.select("#pie-chart svg")
     .append("g")
     .attr("width", width + margin.left + margin.right)
@@ -17,83 +10,79 @@ var svg = d3.select("#pie-chart svg")
     .attr("transform", "translate(" + 525 + "," + 450 + ")")
     .append("g")
 
-/*gives the same numeric value to every object in the datafile (cuz they dont have numeric values)  
-Turn the pie chart 90 degrees counter clockwise, so it starts at the left*/     
+/*gives the same numeric value to every object in the datafile (cuz they dont have numeric values) */     
 var pie = d3.pie()
     .value(function(d){return 1}); 
 
-// Color stuff        
+// Colors       
 var colorLeitsatz = '#3b515b';
-colorA = '#5EADBF',
-colorB = '#BF8888',
-colorC = '#D96B62',
-colorD = '#F25041',
-colorE = '#e2001a',
-colorF = '#c90018';
+colorProfessuren = '#5EADBF',
+colorSchwerpunkte = '#BF8888',
+colorStudiengaenge = '#D96B62',
+colorInKoop = '#F25041',
+colorAuKoop = '#e2001a',
+colorProjekte = '#c90018';
 
 //legend
 var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", "Außeruniversitäre Kooperationen", "Projekte"];
 
-var ringColorLegend_function = function(ring){
+var ringColorLegendFunction = function(ring){
     switch (ring) {
         case "Professuren":
-            return colorA;
+            return colorProfessuren;
             break;
         case "Schwerpunkte":
-            return colorB;
+            return colorSchwerpunkte;
             break;
         case "Studiengänge":
-            return colorC;
+            return colorStudiengaenge;
             break;
         case "Inneruniversitäre Kooperationen":
-            return colorD;
+            return colorInKoop;
             break;
         case "Außeruniversitäre Kooperationen":
-            return colorE;
+            return colorAuKoop;
             break;
         case "Projekte":
-            return colorF;
+            return colorProjekte;
         } 
 };
-// TO DO: zu einer funktion machen
-var color_function = function(i){
+
+var colorRingFunction = function(i){
     switch (i) {
         case 0:
             return colorLeitsatz;
             break;
         case 1:
-            return colorA;
+            return colorProfessuren;
             break;
         case 2:
-            return colorB;
+            return colorSchwerpunkte;
             break;
         case 3:
-            return colorC;
+            return colorStudiengaenge;
             break;
         case 4:
-            return colorD;
+            return colorInKoop;
             break;
         case 5:
-            return colorE;
+            return colorAuKoop;
             break;
         case 6:
-            return colorF;
+            return colorProjekte;
         } 
 };
 
 d3.json("./data/unidata.json").then(function(data){
-    console.log(data);
-    // create a new arc generator   
+
+    //console.log(data);  
     var arc = d3.arc();
 
-    /* all svg elements, bind the values of the dataset to data.  .data joins an array of data 
-    with the current selection g - every data element gets assigned to an g */
     var gs = svg.selectAll("g")
                 .data(d3.values(data))
                 .enter()
                 .append("g")
-                .attr("transform", "translate(" + margin.left + 
-            ", " + margin.top + ")");
+                .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
     // init tooltip
     var tip = d3.tip()
@@ -138,23 +127,25 @@ d3.json("./data/unidata.json").then(function(data){
             .attr("x", -30)
             .attr("width", 20)
             .attr("height", 20)
-            .attr("fill", ringColorLegend_function(ring)
+            .attr("fill", ringColorLegendFunction(ring)
             );    
     });
 
     //tooltipdetails
-    var tooltipDetails = svg.append("g") // 425, - 500
+    var tooltipDetails = svg.append("g")
                             .attr("transform", "translate(" + (width - 575) + 
                             "," + (height - 1420) + ")")
                             .attr('id', 'details')
                             
     // the graph
-    /*takes all dataentries binded to a g (gs) and binds them to a path. every datapath gets also an ringIndex
+    /*every datapath gets also an ringIndex
     each arc/path will be filled according to the ringindex
     d attr defines a path to be drawn, every path has its own innder and outer radius due to the ringindex
-    then the eventlisteners are there for the tool tips */
-    // This dictionary is used to store the center point of all the visible arcs so we can later
-    // use it to create hidden ones formula is : (innerRadius + outerRadius) / 2
+    event listeners for tooltip
+    dictionary is used to store the center point of all the visible arcs so it can be used later to create hidden ones 
+    formula is : (innerRadius + outerRadius) / 2
+    */
+
     var arcIndexDictionary = {};
     var arcRingIndexSizeDictionary = {};
     var arcLineCountDictionary = {};
@@ -169,22 +160,22 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("class", "nameArc")
         .attr("id", function(d,i) { 
             return d.data.name + "nameArc_"+i+i; 
-        }) //Unique id for each slice
+        })
         .attr("d", 
             function(d, i) {
                 var innerRadius = cwidth * d.ringIndex;
                 var outerRadius = cwidth * (d.ringIndex + 1);
                 var innerRadiusSlim = (cwidth * d.ringIndex) + 1.75 *cwidth;
                 var outerRadiusSlim = cwidth * (d.ringIndex + 1) + 1.75 * cwidth;
-                // We need how many items are there in a ring in order to decide which text to flip
+                // stores how many items are there in a ring in order to decide which text to flip
                 arcRingIndexSizeDictionary[d.ringIndex] = i;
-                // Main Arc
+                // Main Arc - draws the rings
                 if (d.ringIndex == 0){
-                    arcIndexDictionary[d.data.name + "nameArc_"+i] = (innerRadius + outerRadius) / 2.04;
+                    arcIndexDictionary[d.data.name + "nameArc_"+i] = (innerRadius + outerRadius) / 2.0;
                     return arc.innerRadius(innerRadius).outerRadius(outerRadius)(d);
                 }
                 else if (d.ringIndex == 1){
-                    arcIndexDictionary[d.data.name + "nameArc_"+i] = (innerRadius + outerRadiusSlim) / 2.04; //not in use atm
+                    arcIndexDictionary[d.data.name + "nameArc_"+i] = (innerRadius + outerRadiusSlim) / 2.04; 
                     return arc.innerRadius(innerRadius).outerRadius(outerRadiusSlim)(d);
                 }
                 else if ( d.ringIndex > 1) {
@@ -194,7 +185,7 @@ d3.json("./data/unidata.json").then(function(data){
             }
         )
         .attr("fill", function(d, arrayindex, j) {
-            return color_function(d.ringIndex);
+            return colorRingFunction(d.ringIndex);
         })
         .attr("name", function(d) {
                 return d.data.name
@@ -204,13 +195,12 @@ d3.json("./data/unidata.json").then(function(data){
             })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide) 
-        //interaction highlight connections/ cooperations 
+
+        //interaction highlight connections/ cooperations + show details
         .on('click', function(d) {
        
-
             var current = d3.select(this).attr("name");
-            var coops = d3.select(this).attr("coop");
-            //console.log(current); 
+            var coops = d3.select(this).attr("coop"); 
 
             // reset to normal                
             if (d3.select(this).style('opacity') == 0.3) {
@@ -219,7 +209,7 @@ d3.json("./data/unidata.json").then(function(data){
                         d3.selectAll(".nameText").style('opacity', 1);
                             return; }
                         
-
+            // filter, change opa of the items that are not selected
             d3.selectAll("path")
                         .filter(function(d) {
                             if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
@@ -234,7 +224,6 @@ d3.json("./data/unidata.json").then(function(data){
                         })
                         .style('opacity', 0.3)    
             ;  
-
             d3.selectAll(".nameText").filter(function(d){
                 if (coops != null){
                 var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
@@ -294,8 +283,8 @@ d3.json("./data/unidata.json").then(function(data){
                                return "translate(0, " + (((i-1) * 20)) + ")"  
                             }
                         
-                        });
-              
+                        })
+                        ;
                     tooltipRow.append("text")
                         .attr("id", "text")
                         .attr("x", -20)
@@ -304,7 +293,6 @@ d3.json("./data/unidata.json").then(function(data){
                         .style("font-size", "15px")
                         .text("")
                     ;  
-
                     tooltipRow.select("text")
                                 .style("font-size", function(){
                                     if (key == "name"){
@@ -315,7 +303,7 @@ d3.json("./data/unidata.json").then(function(data){
                                 })
                                 .attr("fill", function() {
                                     if (key == "name"){
-                                        return color_function(d.ringIndex);
+                                        return colorRingFunction(d.ringIndex);
                                     }})
                                 .style("font-weight", function(){
                                     if (key == "name"){
@@ -335,18 +323,12 @@ d3.json("./data/unidata.json").then(function(data){
                                 })
                 }
             
-        }
-        //tooltipDetails.append("svg:a").attr("xlink:href", function(d){ return "generic.php?url=" + d.data.link })
-        //.html('<a href= "'+ d.data.link +'" target="_blank">' +"</a>")
-            
-    } 
-           
-    )
+            }   
+        })
     ;
 
  
-
-    // Invisible arc to prevent text on standing on its head
+    // Invisible arc to prevent text on standing overhead
     gs.selectAll("hiddenPath")
         .data(function(d,i) {       
             return pie(d).map(function(e){e.ringIndex = i; return e});
@@ -356,7 +338,7 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("class", "textArc")
         .attr("id", function(d,i) { 
             return d.data.name + "textArc_"+i; 
-        }) //Unique id for each hidden slice
+        })
         .attr("d", 
             function(d, i) {
                 // Get the middle of the current arc
@@ -422,8 +404,6 @@ d3.json("./data/unidata.json").then(function(data){
         return lineNumber + 1;
     }
 
-    
-
     // Placing text
     gs.selectAll(".nameText")
         .data(function(d,i) {       
@@ -438,14 +418,18 @@ d3.json("./data/unidata.json").then(function(data){
         .append("textPath")
             .attr("xlink:href",function(d, i, array){
                 if (d.ringIndex > 1) 
-                    {return "#" + d.data.name + "textArc_"+i} //TO DO: inner ring needs to switch text as well,  high prio
+                    {return "#" + d.data.name + "textArc_"+i} 
                 else{
                     return "#" + d.data.name + "nameArc_"+i+i;   }
                 ;
         })
             .style("text-anchor", function(d, i){
-                if (d.ringIndex > 1) 
-                    return "middle";})
+                if (d.ringIndex > 1) {
+                   return "middle"; 
+                }   
+                else {
+                    return "start";
+                }})
             .attr("startOffset", function(d, i){ 
                 if(d.ringIndex == 1) return "12%";   
                 var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
@@ -454,7 +438,7 @@ d3.json("./data/unidata.json").then(function(data){
                 return "25%";
             })
             
-        
+                  
         .text(function(d, i, array){ 
             if (d.ringIndex > 0)
             {return d.data.name};
@@ -464,6 +448,7 @@ d3.json("./data/unidata.json").then(function(data){
                 if(d.ringIndex > 1){return '14px'} else {
                     return '9px';
                 }})
+                
             
         .each(function(d) {
             var lineNo = wrap(this, 150, d.ringIndex);
@@ -494,7 +479,12 @@ d3.json("./data/unidata.json").then(function(data){
                 if (d.ringIndex > 1 && lineCount > 1)
                 {return 2 * lineCount};
         }
-        });
+        })
+        .attr("transform", function(d){
+            if (d.ringIndex == 1){
+              "rotate(-90)"   
+            }
+        })
     
     // middle text
     gs.append("text")
