@@ -559,7 +559,7 @@ d3.json("./data/unidata.json").then(function(data){
             if (d.ringIndex == 1){
                 var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
             }
-            var lineNo = wrap(this, 150, d.ringIndex);
+            var lineNo = wrap(this, 160, d.ringIndex);
             arcLineCountDictionary[d.data.name] = lineNo;
         })
         .on("mouseover", function(d){    
@@ -574,15 +574,10 @@ d3.json("./data/unidata.json").then(function(data){
             var current = d3.select(this).attr("textName");
             var coops = d3.select(this).attr("textCoop");
 
-            //reset to normal (doesnt work like this with text - reeeeeeeeeee)
-            if (d3.select(this).style('opacity') == 0.99){ 
-                d3.selectAll("path").style('opacity', 1);
-                d3.selectAll(".nameText").style('opacity', 1);
-                console.log("erster if-case")
-                return;}
+            //d3.select(this).style('opacity', 0.3)
 
             // filter, change opa of the items that are not selected
-            if (d3.select(this).style('opacity') == 0.3 || d3.select(this).style('opacity') == 1) { //wird auch nicht als 0.3 anerkannt
+            if (d3.select(this).style('opacity') == 1) { //wird auch nicht als 0.3 anerkannt
                 console.log("zweiter if-case" + d3.select(this).style('opacity'))
                 d3.selectAll(".nameArc").style("opacity", 0.99)
                         .filter(function(d) {
@@ -605,9 +600,15 @@ d3.json("./data/unidata.json").then(function(data){
                     else {
                         return d.data.name != current
                     }
-            })
-            .style('opacity', 0.3) 
+            }).style('opacity', 0.3);
         }
+
+            //reset to normal (doesnt work like this with text - reeeeeeeeeee)
+            if (d3.select(this).style('opacity') == 0.99){ 
+                d3.selectAll("path").style('opacity', 1);
+                d3.selectAll(".nameText").style('opacity', 1);
+                console.log("erster if-case")
+                return;}
         
         //tooltipdetails
         d3.select("#details").selectAll("#text").remove();
