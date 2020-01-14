@@ -73,6 +73,7 @@ var colorRingFunction = function(i){
         } 
 };
 
+//load data
 d3.json("./data/unidata.json").then(function(data){
 
     //console.log(data);  
@@ -97,7 +98,7 @@ d3.json("./data/unidata.json").then(function(data){
     // call tooltip
     gs.call(tip);
 
-    //Legend
+    //Legend & filter for rings
     var legend = svg.append("g")
                     .attr("transform", "translate(" + (width - 1545) + 
                         "," + (height - 1425) + ")");
@@ -189,6 +190,12 @@ d3.json("./data/unidata.json").then(function(data){
                 };
                 
                 
+            })
+            .on("mouseover", function(d){
+                d3.select(this).style("cursor", "pointer")
+            })
+            .on("mouseout", function(d){
+                d3.select(this).style("cursor", "default")
             })
             .text(ring)
             .each(function(d){ 
@@ -282,28 +289,32 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("ringindex", function(d) {
                 return d.ringIndex
                 })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide) 
-
+        .on("mouseover", function(d){    
+            d3.select(this).style("cursor", "pointer")
+            return tip.show(d, this)
+        })
+        .on("mouseout", function(d){
+            d3.select(this).style("cursor", "default")
+            return tip.hide(d, this)
+        })
         //interaction highlight connections/ cooperations + show details
         .on('click', function(d) {
             var current = d3.select(this).attr("name");
             var coops = d3.select(this).attr("coop"); 
-
-            // reset to normal                
-            if (d3.select(this).style('opacity') == 0.3) {
-                        d3.selectAll("path")
-                            .style('opacity', 1);
-                        d3.selectAll(".nameText").style('opacity', 1);
-                            return; }
+                            
+            if (d3.select(this).style('opacity') == 0.99){
+                    d3.selectAll("path").style('opacity', 1);
+                    d3.selectAll(".nameText").style('opacity', 1);
+                    return;} 
                         
             // filter, change opa of the items that are not selected
+            if (d3.select(this).style('opacity') == 0.3 || d3.select(this).style('opacity') == 1) {
             d3.selectAll("path")
+                        .style('opacity', 0.99)
                         .filter(function(d) {
                             if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
                             var fadedArcs = d3.select(this).attr("name") != current &&
                             coops.includes(d3.select(this).attr("name")) == false;
-                            console.log(fadedArcs);
                             return fadedArcs; 
                             } else { 
                                 var fadedArcs = d3.select(this).attr("name") != current;
@@ -311,10 +322,11 @@ d3.json("./data/unidata.json").then(function(data){
                                 return fadedArcs;
                             };
                         })
-                        .style('opacity', 0.3)    
+                        .style('opacity', 0.3)
             ;  
-            d3.selectAll(".nameText").filter(function(d){
-
+            d3.selectAll(".nameText")
+                .style('opacity', 0.99)
+                .filter(function(d){
                 if (coops != null){
                 var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
                 return fadedArcs;}
@@ -322,7 +334,7 @@ d3.json("./data/unidata.json").then(function(data){
                     return d.data.name != current;
                 }
             })
-            .style('opacity', 0.3)  
+            .style('opacity', 0.3) } 
         
             //tooltipdetails
             d3.select("#details").selectAll("#text").remove();
@@ -513,29 +525,27 @@ d3.json("./data/unidata.json").then(function(data){
                     return "#" + d.data.name + "nameArc_"+i+i;   }
                 ;
         })
-            .style("text-anchor", function(d, i){
+        .style("text-anchor", function(d, i){
                 if (d.ringIndex > 1) {
                    return "middle"; 
                 }   
                 else {
                     return "start";
                 }})
-            .attr("startOffset", function(d, i){ 
+        .attr("startOffset", function(d, i){ 
                 if(d.ringIndex == 1) return "12%";   
                 var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
                 if(i > ringItemCount/4 && i < ringItemCount * 3/4)
                     return "17%"; 
                 return "25%";
-            })
-            .attr("transform", function(d, i){ //doesnt do anything
-                var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex]
-                if (d.ringIndex == 1){
-                    if(i > ringItemCount/1 && i < ringItemCount * 1/4){
-                        "rotate (90)"} 
-                }
-            })
-            
-                  
+            }) 
+        
+        .attr("textName", function(d) {
+            return d.data.name
+        })
+        .attr("textCoop", function(d) {
+        return d.data.Kooperationspartner
+        })
         .text(function(d, i, array){ 
             if (d.ringIndex > 0)
             {return d.data.name};
@@ -551,7 +561,148 @@ d3.json("./data/unidata.json").then(function(data){
             }
             var lineNo = wrap(this, 150, d.ringIndex);
             arcLineCountDictionary[d.data.name] = lineNo;
-        });
+        })
+        .on("mouseover", function(d){    
+                d3.select(this).style("cursor", "pointer")
+                return tip.show(d, this)
+            })
+        .on("mouseout", function(d){
+                d3.select(this).style("cursor", "default")
+                return tip.hide(d, this)
+            }) 
+        .on("click", function(d){
+            var current = d3.select(this).attr("textName");
+            var coops = d3.select(this).attr("textCoop");
+
+            //reset to normal (doesnt work like this with text - reeeeeeeeeee)
+            if (d3.select(this).style('opacity') == 0.99){ 
+                d3.selectAll("path").style('opacity', 1);
+                d3.selectAll(".nameText").style('opacity', 1);
+                console.log("erster if-case")
+                return;}
+
+            // filter, change opa of the items that are not selected
+            if (d3.select(this).style('opacity') == 0.3 || d3.select(this).style('opacity') == 1) { //wird auch nicht als 0.3 anerkannt
+                console.log("zweiter if-case" + d3.select(this).style('opacity'))
+                d3.selectAll(".nameArc").style("opacity", 0.99)
+                        .filter(function(d) {
+                            if (coops != null){  
+                                var fadedArcs = d3.select(this).attr("name") != current &&
+                                coops.includes(d3.select(this).attr("name")) == false;                          
+                                return fadedArcs; 
+                            } else { 
+                                var fadedArcs = d3.select(this).attr("name") != current;
+                                console.log("No cooperations found");   
+                                return fadedArcs;
+                            };
+                        })
+                        .style('opacity', 0.3)    
+                ;
+                d3.selectAll(".nameText").style("opacity", 0.99).filter(function(d){
+                    if (coops != null){ 
+                        var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
+                        return fadedArcs}
+                    else {
+                        return d.data.name != current
+                    }
+            })
+            .style('opacity', 0.3) 
+        }
+        
+        //tooltipdetails
+        d3.select("#details").selectAll("#text").remove();
+        var i = 0;
+        var linesCount;
+        var lineCountDictionary = [];
+
+        var hadMoreThanOneLiners = function(i){
+            for (var j = 0; j < i; j++){
+                if (lineCountDictionary[j] >= 2) {                       
+                    return true;
+                }
+        }
+        return false;
+        }
+        for (var key in d.data) {
+            if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                i = i + 1;
+                
+                var tooltipRow = tooltipDetails.append("g")
+                // text formatting
+                    .attr("transform", function(){
+                        if //check if there has been a multiliner in headline
+                        (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
+                            //console.log( key + " headline was twoliner")
+                            return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"} 
+                        else if //previous one more than one line and two line headline
+                            (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
+                                //console.log( key + " previous had more lines and two line headline")
+                                return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")"
+                            } else if //check if there has been a multiliner and headline two liner
+                        (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
+                            //console.log( key + " any line before was Moreliner and twoline headline")
+                            return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
+
+                        } else if //previous one more than one line
+                        (lineCountDictionary[i-2] > 1){ 
+                            //console.log( key + " previous had more lines")
+                            return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")" 
+                        } else if //check if there has been a multiliner
+                        (hadMoreThanOneLiners(i) == true){ 
+                            //console.log( key + " any line before was Moreliner")
+                            return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")"
+                        } else if //not the headline and no multliners
+                        (i - 1 != 0) { 
+                           //console.log( key + " simple")
+                           return "translate(0, " + (((i-1) * 20)) + ")"  
+                        }
+                    
+                    })
+                    ;
+                tooltipRow.append("text")
+                    .attr("id", "text")
+                    .attr("x", -20)
+                    .attr("y", 15)
+                    .attr("text-anchor", "start")
+                    .style("font-size", "15px")
+                    .text("")
+                ;  
+                tooltipRow.select("text")
+                            .style("font-size", function(){
+                                if (key == "name"){
+                                    return "18px";
+                                }else {
+                                    return "15px";
+                                }
+                            })
+                            .attr("fill", function() {
+                                if (key == "name"){
+                                    return colorRingFunction(d.ringIndex);
+                                }})
+                            .style("font-weight", function(){
+                                if (key == "name"){
+                                    return "600";
+                                
+                            }})
+                            .text(function(){
+                                    if (key == "Kooperationspartner"){
+                                        return key + ": " + d.data[key]   
+                                    }
+                                    return d.data[key]               
+                            })
+                            .each(function(d){
+                                linesCount = wrap(this, 250, 0)
+                                //console.log( key + linesCount)
+                                lineCountDictionary.push(linesCount);
+                            })
+            }
+        
+        }
+
+            
+            
+        })       
+        
 
     // Centralize everything
     gs.selectAll("text")
