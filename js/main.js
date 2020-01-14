@@ -90,10 +90,11 @@ d3.json("./data/unidata.json").then(function(data){
                 .attr('class', 'd3-tip')
                 .html(function(d) {
                     var text = "<strong> <span style='color:white'>" + d.data.name + "</strong></span><br>" + "<br>";
-                    text += "Anklicken für mehr Info"; 
-                                   
+                    text += "<font size= 2>" + "Anklicken für mehr Info" + "</font>";                  
                     return text;
-                });
+                })
+                .direction('e')
+                ;
 
     // call tooltip
     gs.call(tip);
@@ -506,6 +507,15 @@ d3.json("./data/unidata.json").then(function(data){
         return lineNumber + 1;
     }
 
+    function opacityExist(){
+        var result = false;
+        d3.selectAll(".nameText").each(function(d){
+            if(d3.select(this).style('opacity') != 1)
+            result = true;
+        })
+        return result;
+    }
+
     // Placing text
     gs.selectAll(".nameText")
         .data(function(d,i) {       
@@ -573,12 +583,11 @@ d3.json("./data/unidata.json").then(function(data){
         .on("click", function(d){
             var current = d3.select(this).attr("textName");
             var coops = d3.select(this).attr("textCoop");
-
-            //d3.select(this).style('opacity', 0.3)
+            var opacityStatus = opacityExist();   
 
             // filter, change opa of the items that are not selected
-            if (d3.select(this).style('opacity') == 1) { //wird auch nicht als 0.3 anerkannt
-                console.log("zweiter if-case" + d3.select(this).style('opacity'))
+            if (d3.select(this).style('opacity') == 1 && opacityStatus == false) { 
+                textOpacityActive = true;
                 d3.selectAll(".nameArc").style("opacity", 0.99)
                         .filter(function(d) {
                             if (coops != null){  
@@ -604,7 +613,8 @@ d3.json("./data/unidata.json").then(function(data){
         }
 
             //reset to normal (doesnt work like this with text - reeeeeeeeeee)
-            if (d3.select(this).style('opacity') == 0.99){ 
+            if (d3.select(this).style('opacity') == 1 && opacityStatus == true){ 
+                textOpacityActive = false;
                 d3.selectAll("path").style('opacity', 1);
                 d3.selectAll(".nameText").style('opacity', 1);
                 console.log("erster if-case")
