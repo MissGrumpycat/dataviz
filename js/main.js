@@ -24,7 +24,7 @@ colorAuKoop = '#e2001a',
 colorProjekte = '#c90018';
 
 //legend
-var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", "Außeruniversitäre Kooperationen", "Projekte"];
+var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", "Außeruniversitäre Kooperationen", "Projekte", "Alle anzeigen", "Alle verbergen"];
 
 var ringColorLegendFunction = function(ring){
     switch (ring) {
@@ -106,30 +106,116 @@ d3.json("./data/unidata.json").then(function(data){
 
     rings.forEach(function(ring, i){
         var legendRow = legend.append("g")
-            .attr("transform", "translate(" + 0 + " ," + (i * 40) + ")");
+            .attr("transform", "translate(" + 0 + " ," + (i * 40) + ")")
 
         legendRow.append("text")
-            .attr("text-anchor", "start")
-            .style("font-size", "15px")
+            .attr("name", function(d) {
+            return ring;
+            })
+            .attr("class", "legend")
+
+            .attr("text-anchor", function(){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                    return "middle";
+                }  return "start"
+            })
+            .style("font-size", function (){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                    return "13px"} 
+                    return "15px"
+            })
+            .style("font-weight", function (){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                    return "bold"}
+            })
+            .on("click", function(){
+
+                var current = d3.select(this).attr("name")
+                var currenRingIndex = rings.indexOf(current) + 1
+                var setOpacity = 0.2;
+                
+                //show all
+                if (d3.select(this).attr("name") == "Alle anzeigen"){
+                    d3.selectAll("path").style("opacity", 1);
+                    d3.selectAll(".nameText").style('opacity', 1);
+                    d3.selectAll(".legend").style("opacity", 1);
+                    d3.selectAll(".legendRect").style("opacity", 1); 
+                }
+
+                //hide all
+                if (d3.select(this).attr("name") == "Alle verbergen"){
+                    
+                    d3.selectAll("path").filter(function(d){
+                        var fadedRing = d3.select(this).attr("ringindex") > 0;
+                        return fadedRing}).style("opacity", setOpacity);
+
+                    d3.selectAll(".nameText").style('opacity', setOpacity);
+
+                    d3.selectAll(".legend").filter(function(d){
+                        var fadedLegend = d3.select(this).attr("name") != "Alle anzeigen";
+                        return fadedLegend
+                    }).style("opacity", 0.5);
+
+                    d3.selectAll(".legendRect").style("opacity", 0.5); 
+                }
+
+                // blend out the circles
+                if (d3.select(this).attr("name") == current && d3.select(this).attr("name") != "Alle anzeigen"
+                && d3.select(this).attr("name") != "Alle verbergen"){
+                    
+                    d3.selectAll("path").filter(function(d) {
+                        var fadedRing = d3.select(this).attr("ringindex") == currenRingIndex;
+                        return fadedRing;
+                    }).style("opacity", function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}
+                    });
+                    
+                    d3.selectAll(".nameText").filter(function(d){
+                        var fadedText = d.ringIndex == currenRingIndex
+                        return fadedText;
+                    }).style('opacity', function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+
+                    d3.select(this).style("opacity", function(){
+                        if (d3.select(this).style("opacity") == 1 && d3.select(this).attr("name") == current) 
+                        {return 0.5} 
+                        else {return 1}})
+
+                    d3.selectAll(".legendRect").filter(function(d){
+                        var fadedRects = d3.select(this).attr("rectname") == current
+                        return fadedRects;
+                    }).style('opacity', function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                };
+                
+                
+            })
             .text(ring)
             .each(function(d){ 
                 linesLegendCount = wrap(this, 200, 0)
             })
-            .attr("x", 20)
             .attr("y", function(){
                 if (linesLegendCount == 2){
-                    return 7;
+                    return 8;
                 }  
-                return 15;
+                return 16;
             })
             ;
+
         legendRow.append("rect")
-            .attr("x", -30)
-            .attr("width", 20)
-            .attr("height", 20)
-            .attr("fill", ringColorLegendFunction(ring)
-            );    
+            .attr("class", "legendRect")
+            .attr("x", -38)
+            .attr("rectname", ring)
+            .attr("width", 22)
+            .attr("height", 22)
+            .attr("fill", function(){
+               if (ring != "Alle anzeigen" && ring != "Alle verbergen"){
+                return ringColorLegendFunction(ring)
+               } else { return "None"} 
+                }
+            ); 
     });
+
 
     //tooltipdetails
     var tooltipDetails = svg.append("g")
@@ -159,14 +245,14 @@ d3.json("./data/unidata.json").then(function(data){
         .append("path")
         .attr("class", "nameArc")
         .attr("id", function(d,i) { 
-            return d.data.name + "nameArc_"+i+i; 
+            return d.data.name + "nameArc_"+i+i; //if d.ringIndex added inner ring text vanishes???
         })
         .attr("d", 
             function(d, i) {
                 var innerRadius = cwidth * d.ringIndex;
                 var outerRadius = cwidth * (d.ringIndex + 1);
-                var innerRadiusSlim = (cwidth * d.ringIndex) + 1.75 *cwidth;
-                var outerRadiusSlim = cwidth * (d.ringIndex + 1) + 1.75 * cwidth;
+                var innerRadiusSlim = (cwidth * d.ringIndex) + 2 *cwidth;
+                var outerRadiusSlim = cwidth * (d.ringIndex + 1) + 2 * cwidth;
                 // stores how many items are there in a ring in order to decide which text to flip
                 arcRingIndexSizeDictionary[d.ringIndex] = i;
                 // Main Arc - draws the rings
@@ -193,12 +279,14 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("coop", function(d) {
             return d.data.Kooperationspartner
             })
+        .attr("ringindex", function(d) {
+                return d.ringIndex
+                })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide) 
 
         //interaction highlight connections/ cooperations + show details
         .on('click', function(d) {
-       
             var current = d3.select(this).attr("name");
             var coops = d3.select(this).attr("coop"); 
 
@@ -215,6 +303,7 @@ d3.json("./data/unidata.json").then(function(data){
                             if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
                             var fadedArcs = d3.select(this).attr("name") != current &&
                             coops.includes(d3.select(this).attr("name")) == false;
+                            console.log(fadedArcs);
                             return fadedArcs; 
                             } else { 
                                 var fadedArcs = d3.select(this).attr("name") != current;
@@ -225,6 +314,7 @@ d3.json("./data/unidata.json").then(function(data){
                         .style('opacity', 0.3)    
             ;  
             d3.selectAll(".nameText").filter(function(d){
+
                 if (coops != null){
                 var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
                 return fadedArcs;}
@@ -434,23 +524,31 @@ d3.json("./data/unidata.json").then(function(data){
                 if(d.ringIndex == 1) return "12%";   
                 var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
                 if(i > ringItemCount/4 && i < ringItemCount * 3/4)
-                    return "17%"; // TO DO: not a hardcoded number? textlength matters
+                    return "17%"; 
                 return "25%";
+            })
+            .attr("transform", function(d, i){ //doesnt do anything
+                var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex]
+                if (d.ringIndex == 1){
+                    if(i > ringItemCount/1 && i < ringItemCount * 1/4){
+                        "rotate (90)"} 
+                }
             })
             
                   
         .text(function(d, i, array){ 
             if (d.ringIndex > 0)
             {return d.data.name};
-        })
+            })
             .style('font-family', 'arial')
             .attr('font-size', function(d){
                 if(d.ringIndex > 1){return '14px'} else {
                     return '9px';
                 }})
-                
-            
         .each(function(d) {
+            if (d.ringIndex == 1){
+                var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
+            }
             var lineNo = wrap(this, 150, d.ringIndex);
             arcLineCountDictionary[d.data.name] = lineNo;
         });
@@ -462,11 +560,11 @@ d3.json("./data/unidata.json").then(function(data){
             var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
             // inner text ring 
             if (d.ringIndex == 1){
-                    return "8"};
+                    return "9"};
             //upper
             if(i <= ringItemCount/4 || i >= ringItemCount * 3/4){
                 if(d.ringIndex > 1 && lineCount == 1){
-                    return "0";   
+                    return "-1";   
                 };
                 if (d.ringIndex > 1 && lineCount > 1)
                 {return -4.5 * lineCount};
@@ -480,11 +578,7 @@ d3.json("./data/unidata.json").then(function(data){
                 {return 2 * lineCount};
         }
         })
-        .attr("transform", function(d){
-            if (d.ringIndex == 1){
-              "rotate(-90)"   
-            }
-        })
+        
     
     // middle text
     gs.append("text")
