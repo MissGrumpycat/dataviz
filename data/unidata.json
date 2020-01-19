@@ -484,28 +484,28 @@
             "name": "Projekt AB",
             "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte. Sollte in kurzer Form beschreiben worum es in dem Projekt geht",
             "pk_budget": 20000,
-            "Kooperationspartner": [],
+            "Kooperationspartner": "Softwarekonstruktion, Informatik,Philosophie",
             "link": "https://www.uni-hamburg.de/"}, 
          
         {
             "name": "Projekt BC",
             "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "pk_budget": 20000,
-            "Kooperationspartner": [],
+            "Kooperationspartner": "Softwarekonstruktion, Informatik",
             "link": "https://www.uni-hamburg.de/"}, 
         
         {
             "name": "Projekt CD",
             "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "pk_budget": 20000,
-            "Kooperationspartner": [],
+            "Kooperationspartner": "ThSI, Geisteswissenschaften, TUHH, KNU, Rechtswissenschaften",
             "link": "https://www.uni-hamburg.de/"}, 
        
         {
             "name": "Projekt DE",
             "pk_beschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "pk_budget": 20000,
-            "Kooperationspartner": [],
+            "Kooperationspartner": "Sicherheit",
             "link": "https://www.uni-hamburg.de/"} 
         
     ]

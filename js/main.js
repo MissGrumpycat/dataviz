@@ -361,28 +361,32 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("transform", function(){
                             if //check if there has been a multiliner in headline
                             (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
-                                //console.log( key + " headline was twoliner")
+                                console.log( key + " headline was twoliner")
                                 return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"} 
                             else if //previous one more than one line and two line headline
                                 (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
-                                    //console.log( key + " previous had more lines and two line headline")
+                                    console.log( key + " previous had more lines and two line headline")
                                     return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")"
                                 } else if //check if there has been a multiliner and headline two liner
                             (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
-                                //console.log( key + " any line before was Moreliner and twoline headline")
+                                console.log( key + " any line before was Moreliner and twoline headline")
                                 return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
 
                             } else if //previous one more than one line
-                            (lineCountDictionary[i-2] > 1){ 
-                                //console.log( key + " previous had more lines")
+                            (lineCountDictionary[i-2] > 1 && key != "link"){ 
+                                console.log( key + " previous had more lines")
                                 return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")" 
+                            } else if //check if there has been a multiliner and previous one as well
+                            (hadMoreThanOneLiners(i) == true && lineCountDictionary[i-2] > 1){ 
+                                console.log( key + " any line + previous before was Moreliner "  + lineCountDictionary[i-2])
+                                return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
                             } else if //check if there has been a multiliner
                             (hadMoreThanOneLiners(i) == true){ 
-                                //console.log( key + " any line before was Moreliner")
+                                console.log( key + " any line before was Moreliner")
                                 return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")"
                             } else if //not the headline and no multliners
                             (i - 1 != 0) { 
-                               //console.log( key + " simple")
+                               console.log( key + " simple")
                                return "translate(0, " + (((i-1) * 20)) + ")"  
                             }
                         
