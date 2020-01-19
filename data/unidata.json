@@ -269,16 +269,18 @@
         }
     ],
     "Forschunsbereiche": [
-        {
-            "name": "Computing in Science/ Data Science",
-            "f_professuren": "Professur A, B, C",
-            "link": "https://www.uni-hamburg.de/"
-            },
+
         {
             "name": "Information Governance Technology",
             "f_professuren": "ProfessurA, ProfessurB, ProfessurC",
             "link": "https://www.uni-hamburg.de/"
             },
+        {
+            "name": "Computing in Science/ Data Science",
+            "f_professuren": "Professur A, B, C",
+            "link": "https://www.uni-hamburg.de/"
+            },
+        
         {
             "name": "Cognitive Systems",
             "f_professuren": "ProfessurA, ProfessurB, ProfessurC",
