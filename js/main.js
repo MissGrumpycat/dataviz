@@ -339,6 +339,7 @@ d3.json("./data/unidata.json").then(function(data){
         
             //tooltipdetails
             d3.select("#details").selectAll("#text").remove();
+            d3.select("#details").selectAll("a").remove();
             var i = 0;
             var linesCount;
             var lineCountDictionary = [];
@@ -355,36 +356,63 @@ d3.json("./data/unidata.json").then(function(data){
             for (var key in d.data) {
                 if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
                     i = i + 1;
-                    
-                    var tooltipRow = tooltipDetails.append("g")
-                    // text formatting
+                    var linkDistance = 15;
+                    var tooltipRow = tooltipDetails.append("g")           
+        // text formatting
                         .attr("transform", function(){
                             if //check if there has been a multiliner in headline
                             (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
                                 console.log( key + " headline was twoliner")
-                                return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"} 
+                                if ( key == "link"){
+                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * lineCountDictionary[i-2]))) + ")"
+                                }else {
+                                  return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"  
+                                }} 
                             else if //previous one more than one line and two line headline
                                 (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
                                     console.log( key + " previous had more lines and two line headline")
-                                    return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")"
+                                    if (key == "link"){
+                                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (20 * lineCountDictionary[i-2]))) + ")"
+                                    } else {
+                                      return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")" 
+                                    }
                                 } else if //check if there has been a multiliner and headline two liner
                             (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
                                 console.log( key + " any line before was Moreliner and twoline headline")
-                                return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
-
-                            } else if //previous one more than one line
-                            (lineCountDictionary[i-2] > 1 && key != "link"){ 
-                                console.log( key + " previous had more lines")
-                                return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")" 
+                                if (key == "link"){
+                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * (Math.max(...lineCountDictionary))))) + ")"
+                                } else {
+                                   return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
+                                }
                             } else if //check if there has been a multiliner and previous one as well
-                            (hadMoreThanOneLiners(i) == true && lineCountDictionary[i-2] > 1){ 
-                                console.log( key + " any line + previous before was Moreliner "  + lineCountDictionary[i-2])
-                                return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
+                            (hadMoreThanOneLiners(i-2) == true && lineCountDictionary[i-2] > 1){ 
+                                console.log( key + " any line + previous before was Moreliner ")       
+                                if (key == "link"){
+                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
+                                } else {
+                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"  
+                                }
+                            } else if //previous one more than one line
+                            (lineCountDictionary[i-2] > 1 ){ 
+                                console.log( key + " previous had more lines")
+                                if (key == "link"){
+                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2]))) + ")"
+                                }else {
+                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")"  
+                                } 
                             } else if //check if there has been a multiliner
                             (hadMoreThanOneLiners(i) == true){ 
                                 console.log( key + " any line before was Moreliner")
-                                return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")"
-                            } else if //not the headline and no multliners
+                                if (key == "link"){
+                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
+                                } else {
+                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")" 
+                                }      
+                            } else if // if link and no multiliners
+                            (i - 1 != 0 && key == "link") { 
+                               console.log( key + " simple")
+                               return "translate(0, " + (((i-1) * 20 + linkDistance)) + ")"  
+                            }else if //not the headline and no multliners
                             (i - 1 != 0) { 
                                console.log( key + " simple")
                                return "translate(0, " + (((i-1) * 20)) + ")"  
@@ -392,6 +420,7 @@ d3.json("./data/unidata.json").then(function(data){
                         
                         })
                         ;
+
                     tooltipRow.append("text")
                         .attr("id", "text")
                         .attr("x", -20)
@@ -399,7 +428,17 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("text-anchor", "start")
                         .style("font-size", "15px")
                         .text("")
-                    ;  
+                    ; 
+                    
+                    if (key == "link"){
+                        //console.log(d.data[key])
+                        var url = d.data[key]
+                        tooltipRow.append("a")
+                            .attr("xlink:href", function(d){return url;})
+                            .append("text")
+                            .text(function(d) {return url;})
+                            .style("font-size", "15px")    
+                    } else {   
                     tooltipRow.select("text")
                                 .style("font-size", function(){
                                     if (key == "name"){
@@ -428,6 +467,7 @@ d3.json("./data/unidata.json").then(function(data){
                                     //console.log( key + linesCount)
                                     lineCountDictionary.push(linesCount);
                                 })
+                            }
                 }
             
             }   
