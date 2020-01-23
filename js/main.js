@@ -287,6 +287,9 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("coop", function(d) {
             return d.data.Kooperationspartner
             })
+        .attr("fb_professuren", function(d) {
+            return d.data.Forschungsbereichsprofessuren
+            })
         .attr("ringindex", function(d) {
                 return d.ringIndex
                 })
@@ -302,6 +305,15 @@ d3.json("./data/unidata.json").then(function(data){
         .on('click', function(d) {
             var current = d3.select(this).attr("name");
             var coops = d3.select(this).attr("coop"); 
+            var fb_profs = d3.select(this).attr("fb_professuren")
+
+            // make current textnode bold to differentiate it from cooperations
+            d3.selectAll(".nameText").filter(function(d){
+                return d.data.name == current
+            }).style("font-weight", "bold")
+            d3.selectAll(".nameText").filter(function(d){
+                return d.data.name != current
+            }).style("font-weight", "normal")
                             
             if (d3.select(this).style('opacity') == 0.99){
                     d3.selectAll("path").style('opacity', 1);
@@ -310,32 +322,42 @@ d3.json("./data/unidata.json").then(function(data){
                         
             // filter, change opa of the items that are not selected
             if (d3.select(this).style('opacity') == 0.3 || d3.select(this).style('opacity') == 1) {
-            d3.selectAll("path")
-                        .style('opacity', 0.99)
-                        .filter(function(d) {
-                            if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
-                            var fadedArcs = d3.select(this).attr("name") != current &&
-                            coops.includes(d3.select(this).attr("name")) == false;
-                            return fadedArcs; 
-                            } else { 
-                                var fadedArcs = d3.select(this).attr("name") != current;
-                                console.log("No cooperations found");
-                                return fadedArcs;
-                            };
-                        })
-                        .style('opacity', 0.3)
-            ;  
-            d3.selectAll(".nameText")
-                .style('opacity', 0.99)
-                .filter(function(d){
-                if (coops != null){
-                var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
-                return fadedArcs;}
-                else {
-                    return d.data.name != current;
-                }
-            })
-            .style('opacity', 0.3) } 
+                d3.selectAll("path")
+                            .style('opacity', 0.99)
+                            .filter(function(d) {
+                                if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
+                                var fadedArcs = d3.select(this).attr("name") != current &&
+                                coops.includes(d3.select(this).attr("name")) == false;
+                                return fadedArcs; 
+                                } else if (fb_profs != null){
+                                    var fadedArcs = d3.select(this).attr("name") != current &&
+                                    fb_profs.includes(d3.select(this).attr("name")) == false;
+                                    return fadedArcs; 
+                                }
+                                else { 
+                                    console.log(fb_profs)
+                                    var fadedArcs = d3.select(this).attr("name") != current;
+                                    console.log("No cooperations or fb_profs found");
+                                    return fadedArcs;
+                                };
+                            })
+                            .style('opacity', 0.3)
+                ;  
+                d3.selectAll(".nameText")
+                    .style('opacity', 0.99)
+                    .filter(function(d){
+                    if (coops != null){
+                    var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
+                    return fadedArcs;
+                } else if (fb_profs != null){
+                    var fadedArcs = fb_profs.includes(d.data.name) == false && (d.data.name != current)
+                    return fadedArcs; 
+                } else {
+                        return d.data.name != current;
+                    }
+                })
+                .style('opacity', 0.3) 
+            } 
         
             //tooltipdetails
             d3.select("#details").selectAll("#text").remove();
@@ -358,7 +380,7 @@ d3.json("./data/unidata.json").then(function(data){
                     i = i + 1;
                     var linkDistance = 15;
                     var tooltipRow = tooltipDetails.append("g")           
-        // text formatting
+        // text formatting arc clicked
                         .attr("transform", function(){
                             if //check if there has been a multiliner in headline
                             (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
@@ -457,7 +479,7 @@ d3.json("./data/unidata.json").then(function(data){
                                     
                                 }})
                                 .text(function(){
-                                        if (key == "Kooperationspartner"){
+                                        if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
                                             return key + ": " + d.data[key]   
                                         }
                                         return d.data[key]               
@@ -592,6 +614,9 @@ d3.json("./data/unidata.json").then(function(data){
         .attr("textCoop", function(d) {
         return d.data.Kooperationspartner
         })
+        .attr("text_fb_profs", function(d) {
+            return d.data.Forschungsbereichsprofessuren
+            })
         .text(function(d, i, array){ 
             if (d.ringIndex > 0)
             {return d.data.name};
@@ -622,6 +647,14 @@ d3.json("./data/unidata.json").then(function(data){
         .on("click", function(d){
             var current = d3.select(this).attr("textName");
             var coops = d3.select(this).attr("textCoop");
+            var fb_profs = d3.select(this).attr("text_fb_profs");
+
+            d3.selectAll(".nameText").filter(function(d){
+                return d.data.name == current
+            }).style("font-weight", "bold")
+            d3.selectAll(".nameText").filter(function(d){
+                return d.data.name != current
+            }).style("font-weight", "normal")
 
         d3.selectAll(".nameText")
         .attr("active", function(){
@@ -670,12 +703,18 @@ d3.json("./data/unidata.json").then(function(data){
                 d3.selectAll("path").style("opacity", 0.99)
                         .filter(function(d) {
                             if (coops != null){  
+                                //console.log("text: coops")
                                 var fadedArcs = d3.select(this).attr("name") != current &&
                                 coops.includes(d3.select(this).attr("name")) == false;                          
                                 return fadedArcs; 
+                            } else if (fb_profs != null){
+                                //console.log("text: profs")
+                                var fadedArcs = d3.select(this).attr("name") != current &&
+                                fb_profs.includes(d3.select(this).attr("name")) == false;                          
+                                return fadedArcs; 
                             } else { 
                                 var fadedArcs = d3.select(this).attr("name") != current;
-                                console.log("No cooperations found");   
+                                console.log("text: no coops or no profs");   
                                 return fadedArcs;
                             };
                         })
@@ -685,8 +724,11 @@ d3.json("./data/unidata.json").then(function(data){
                 .filter(function(d){
                     if (coops != null){ 
                         var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
-                        return fadedArcs}
-                    else {
+                        return fadedArcs
+                    } else if (fb_profs != null){
+                            var fadedArcs = (d.data.name != current) && fb_profs.includes(d.data.name) == false;                          
+                            return fadedArcs; 
+                    } else {
                         return d.data.name != current
                     }
             }).style('opacity', 0.3)
@@ -694,6 +736,7 @@ d3.json("./data/unidata.json").then(function(data){
         
         //tooltipdetails
         d3.select("#details").selectAll("#text").remove();
+        d3.select("#details").selectAll("a").remove();
         var i = 0;
         var linesCount;
         var lineCountDictionary = [];
@@ -709,38 +752,69 @@ d3.json("./data/unidata.json").then(function(data){
         for (var key in d.data) {
             if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
                 i = i + 1;
-                
+                var linkDistance = 15;
                 var tooltipRow = tooltipDetails.append("g")
-                // text formatting
-                    .attr("transform", function(){
-                        if //check if there has been a multiliner in headline
-                        (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
-                            //console.log( key + " headline was twoliner")
-                            return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"} 
-                        else if //previous one more than one line and two line headline
-                            (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
-                                //console.log( key + " previous had more lines and two line headline")
-                                return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")"
-                            } else if //check if there has been a multiliner and headline two liner
-                        (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
-                            //console.log( key + " any line before was Moreliner and twoline headline")
-                            return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
-
-                        } else if //previous one more than one line
-                        (lineCountDictionary[i-2] > 1){ 
-                            //console.log( key + " previous had more lines")
-                            return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")" 
-                        } else if //check if there has been a multiliner
-                        (hadMoreThanOneLiners(i) == true){ 
-                            //console.log( key + " any line before was Moreliner")
-                            return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")"
-                        } else if //not the headline and no multliners
-                        (i - 1 != 0) { 
-                           //console.log( key + " simple")
-                           return "translate(0, " + (((i-1) * 20)) + ")"  
+        // text formatting text clicked
+                .attr("transform", function(){
+                    if //check if there has been a multiliner in headline
+                    (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
+                        console.log( key + " headline was twoliner")
+                        if ( key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * lineCountDictionary[i-2]))) + ")"
+                        }else {
+                          return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"  
+                        }} 
+                    else if //previous one more than one line and two line headline
+                        (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
+                            console.log( key + " previous had more lines and two line headline")
+                            if (key == "link"){
+                                return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (20 * lineCountDictionary[i-2]))) + ")"
+                            } else {
+                              return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")" 
+                            }
+                        } else if //check if there has been a multiliner and headline two liner
+                    (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
+                        console.log( key + " any line before was Moreliner and twoline headline")
+                        if (key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * (Math.max(...lineCountDictionary))))) + ")"
+                        } else {
+                           return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
                         }
-                    
-                    })
+                    } else if //check if there has been a multiliner and previous one as well
+                    (hadMoreThanOneLiners(i-2) == true && lineCountDictionary[i-2] > 1){ 
+                        console.log( key + " any line + previous before was Moreliner ")       
+                        if (key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
+                        } else {
+                          return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"  
+                        }
+                    } else if //previous one more than one line
+                    (lineCountDictionary[i-2] > 1 ){ 
+                        console.log( key + " previous had more lines")
+                        if (key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2]))) + ")"
+                        }else {
+                          return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")"  
+                        } 
+                    } else if //check if there has been a multiliner
+                    (hadMoreThanOneLiners(i) == true){ 
+                        console.log( key + " any line before was Moreliner")
+                        if (key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
+                        } else {
+                          return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")" 
+                        }      
+                    } else if // if link and no multiliners
+                    (i - 1 != 0 && key == "link") { 
+                       console.log( key + " simple")
+                       return "translate(0, " + (((i-1) * 20 + linkDistance)) + ")"  
+                    }else if //not the headline and no multliners
+                    (i - 1 != 0) { 
+                       console.log( key + " simple")
+                       return "translate(0, " + (((i-1) * 20)) + ")"  
+                    }
+                
+                })
                     ;
                 tooltipRow.append("text")
                     .attr("id", "text")
@@ -768,7 +842,7 @@ d3.json("./data/unidata.json").then(function(data){
                                 
                             }})
                             .text(function(){
-                                    if (key == "Kooperationspartner"){
+                                    if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
                                         return key + ": " + d.data[key]   
                                     }
                                     return d.data[key]               
