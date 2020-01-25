@@ -316,8 +316,11 @@ d3.json("./data/unidata.json").then(function(data){
             }).style("font-weight", "normal")
                             
             if (d3.select(this).style('opacity') == 0.99){
+                    d3.select("#details").selectAll("#text").remove();
+                    d3.select("#details").selectAll("a").remove();
                     d3.selectAll("path").style('opacity', 1);
                     d3.selectAll(".nameText").style('opacity', 1);
+                    d3.selectAll(".nameText").style('font-weight', "normal");
                     return;} 
                         
             // filter, change opa of the items that are not selected
@@ -623,7 +626,7 @@ d3.json("./data/unidata.json").then(function(data){
             })
             .style('font-family', 'arial')
             .attr('font-size', function(d){
-                if(d.ringIndex > 1){return '14px'} else {
+                if(d.ringIndex > 1){return '13px'} else {
                     return '9px';
                 }})
         .each(function(d) {
@@ -641,65 +644,26 @@ d3.json("./data/unidata.json").then(function(data){
                 d3.select(this).style("cursor", "default")
                 return tip.hide(d, this)
             }) 
-        .attr("active", "false")
-        .attr("hidden", "false")
-        .attr("neutral", "true")
         .on("click", function(d){
             var current = d3.select(this).attr("textName");
             var coops = d3.select(this).attr("textCoop");
             var fb_profs = d3.select(this).attr("text_fb_profs");
 
-            d3.selectAll(".nameText").filter(function(d){
-                return d.data.name == current
-            }).style("font-weight", "bold")
-            d3.selectAll(".nameText").filter(function(d){
-                return d.data.name != current
-            }).style("font-weight", "normal")
-
-        d3.selectAll(".nameText")
-        .attr("active", function(){
-            if (d3.select(this).style('opacity') == "0.3"){
-                return "false";
-            }
-             else if (d3.select(this).style('opacity') == "0.99"){
-                return "true";
-            }
-            else if (d3.select(this).style('opacity') == "1"){
-                return "false";
-            }
-        }).attr("neutral", function(){
-            if (d3.select(this).style("opacity") == "0.3"){
-                return "false"
-            }
-            else if (d3.select(this).style("opacity") == "0.99"){
-                return "false"
-            }
-            else if (d3.select(this).style("opacity") == "1"){
-                return "true"
-            }
-        }).attr("hidden", function(){
-            if (d3.select(this).style("opacity") == "0.3"){
-                return "true"
-
-            }
-            else if (d3.select(this).style("opacity") == "0.99"){
-                return "false"
-            }
-
-            if (d3.select(this).style("opacity") == "1"){
-                return "false"
-            }
-        })
+            console.log(d3.select(this).style("font-weight"))
        
         //reset to normal 
-        if (d3.select(this).attr("active") == "true"){ 
-                console.log("aktiv,nicht neutral oder versteckt")
+        if (d3.select(this).style("font-weight") == 700){ 
+                d3.select("#details").selectAll("#text").remove();
+                d3.select("#details").selectAll("a").remove();
+                console.log("text: reset to normal")
                 d3.selectAll("path").style('opacity', 1)
                 d3.selectAll(".nameText").style('opacity', 1)
+                d3.selectAll(".nameText").style('font-weight', "normal")
                 return;}
+
         // filter, change opa of the items that are not selected
-        else if (d3.select(this).attr("hidden") == "true" || d3.select(this).attr("neutral") == "true" || d3.select(this).attr("active") == "false") { 
-                console.log("nicht aktiv, neutral oder versteckt")
+        else if (d3.select(this).style("font-weight") == 400) { 
+                console.log("make bold and highlight")
                 d3.selectAll("path").style("opacity", 0.99)
                         .filter(function(d) {
                             if (coops != null){  
@@ -733,6 +697,13 @@ d3.json("./data/unidata.json").then(function(data){
                     }
             }).style('opacity', 0.3)
         }
+
+        d3.selectAll(".nameText").filter(function(d){
+            return d.data.name == current
+        }).style("font-weight", "bold")
+        d3.selectAll(".nameText").filter(function(d){
+            return d.data.name != current
+        }).style("font-weight", "normal")
         
         //tooltipdetails
         d3.select("#details").selectAll("#text").remove();
@@ -823,7 +794,18 @@ d3.json("./data/unidata.json").then(function(data){
                     .attr("text-anchor", "start")
                     .style("font-size", "15px")
                     .text("")
-                ;  
+                ; 
+                 
+                
+                if (key == "link"){
+                    //console.log(d.data[key])
+                    var url = d.data[key]
+                    tooltipRow.append("a")
+                        .attr("xlink:href", function(d){return url;})
+                        .append("text")
+                        .text(function(d) {return url;})
+                        .style("font-size", "15px")    
+                } else {
                 tooltipRow.select("text")
                             .style("font-size", function(){
                                 if (key == "name"){
@@ -852,6 +834,7 @@ d3.json("./data/unidata.json").then(function(data){
                                 //console.log( key + linesCount)
                                 lineCountDictionary.push(linesCount);
                             })
+                }
             }
         
         }
