@@ -543,7 +543,7 @@ d3.json("./data/unidata.json").then(function(data){
         )
         .attr("fill", "none");
 
-    var lineconstant;
+    var lineNumber;
         
     // text wrap function
     function wrap(text2, width, ringIndex) {
@@ -551,7 +551,7 @@ d3.json("./data/unidata.json").then(function(data){
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
-            lineconstant = 0,
+            lineNumber = 0,
             lineHeight = 1.1, // ems
             y = text.attr("y"),
             tspan = text.text(null)
@@ -568,12 +568,12 @@ d3.json("./data/unidata.json").then(function(data){
             tspan = text.append("tspan")
                         .attr("x", 0) 
                         .attr("y", y) 
-                        .attr("dy", ++lineconstant * lineHeight + "em")
+                        .attr("dy", ++lineNumber * lineHeight + "em")
                         .text(word)
         }
         }
         // +1 because if there are no tspans word itself is a line
-        return lineconstant + 1;
+        return lineNumber + 1;
     }
     
             
@@ -597,9 +597,6 @@ d3.json("./data/unidata.json").then(function(data){
                 ;
         })
         .style("text-anchor", function(d, i){
-                var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];    
-	            if(d.ringIndex == 1 && i <= ringItemCount/2)
-	                    return "start"; 
                 if (d.ringIndex > 1) {
                    return "middle"; 
                 }   
@@ -607,8 +604,6 @@ d3.json("./data/unidata.json").then(function(data){
                     return "start";
                 }})
         .attr("startOffset", function(d, i){ 
-            if(d.ringIndex == 1 && i <= ringItemCount/2) 
-	            return "50%"; 
                 if(d.ringIndex == 1) return "12%";   
                 var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
                 if(i > ringItemCount/4 && i < ringItemCount * 3/4)
@@ -873,26 +868,8 @@ d3.json("./data/unidata.json").then(function(data){
                 if (d.ringIndex > 1 && lineCount > 1)
                 {return 2 * lineCount};
         }
-    })
-
-    // ROTATE
-    d3.selectAll("text")
-    .attr("transform", function(d, i) {
-    if (d !== undefined) {
-        var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-        if (d.ringIndex == 1 && i <= ringItemCount / 2) {
-            var locationData = this.getBBox();
-            var centerX = locationData.x + (locationData.width / 2);
-            var centerY = locationData.y + (locationData.height / 2);
-
-            var result = 'translate(' + centerX + ',' + centerY + ')';
-            result += 'rotate(180)';
-            result += 'translate(' + (-centerX) + ',' + (-centerY) + ')';
-            return result;
-        }
-    }
-    });
-
+        })
+        
     
     // middle text
     gs.append("text")
