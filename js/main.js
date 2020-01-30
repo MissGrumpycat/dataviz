@@ -115,11 +115,20 @@ d3.json("./data/unidata.json").then(function(data){
             return ring;
             })
             .attr("class", "legend")
-
             .attr("text-anchor", function(){
                 if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
-                    return "middle";
+                    return "start";
                 }  return "start"
+            })
+            .attr("dx", function(){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                    return "-38";
+                }
+            })
+            .attr("dy", function(){
+                if (ring == "Alle verbergen"){
+                    return "-12";
+                }
             })
             .style("font-size", function (){
                 if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
@@ -221,15 +230,66 @@ d3.json("./data/unidata.json").then(function(data){
                 return ringColorLegendFunction(ring)
                } else { return "None"} 
                 }
-            ); 
+            )
+            .on("mouseover", function(d){
+                d3.select(this).style("cursor", "pointer")
+            })
+            .on("mouseout", function(d){
+                d3.select(this).style("cursor", "default")
+            })
+            .on("click", function(){
+
+                var current = d3.select(this).attr("rectname")
+                var currenRingIndex = rings.indexOf(current) + 1
+                var setOpacity = 0.2;
+
+                // blend out the circles
+                if (d3.select(this).attr("rectname") == current){
+                    //console.log(d3.select(this).attr("rectname"))
+                    d3.selectAll("path").filter(function(d) {
+                        var fadedRing = d3.select(this).attr("ringindex") == currenRingIndex;
+                        return fadedRing;
+                    }).style("opacity", function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}
+                    });
+                    
+                    d3.selectAll(".nameText").filter(function(d){
+                        var fadedText = d.ringIndex == currenRingIndex
+                        return fadedText;
+                    }).style('opacity', function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+
+                    d3.select(this).style("opacity", function(){
+                        if (d3.select(this).style("opacity") == 1 && d3.select(this).attr("rectname") == current) {
+                            return 0.5
+                        } 
+                        else {
+                            return 1
+                        }
+                    })
+
+                    d3.selectAll(".legend").filter(function(d){
+                        var fadedRects = d3.select(this).attr("name") == current
+                        return fadedRects;
+                    }).style('opacity', function(d) {
+                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                };
+                
+                
+            }) 
     });
 
 
     //tooltipdetails
     var tooltipDetails = svg.append("g")
-                            .attr("transform", "translate(" + (width - 575) + 
+                            .attr("transform", "translate(" + (width - 560) + 
                             "," + (height - 1420) + ")")
                             .attr('id', 'details')
+    ;
+
+    var imgDistance = 20;
+
+                    
                             
     // the graph
     /*every datapath gets also an ringIndex
@@ -318,6 +378,7 @@ d3.json("./data/unidata.json").then(function(data){
             if (d3.select(this).style('opacity') == 0.99){
                     d3.select("#details").selectAll("#text").remove();
                     d3.select("#details").selectAll("a").remove();
+                    d3.select("#details").selectAll("image").remove();
                     d3.selectAll("path").style('opacity', 1);
                     d3.selectAll(".nameText").style('opacity', 1);
                     d3.selectAll(".nameText").style('font-weight', "normal");
@@ -361,10 +422,14 @@ d3.json("./data/unidata.json").then(function(data){
                 })
                 .style('opacity', 0.3) 
             } 
+
+
+        // text formatting arc clicked  
         
-            //tooltipdetails
-            d3.select("#details").selectAll("#text").remove();
-            d3.select("#details").selectAll("a").remove();
+        d3.select("#details").selectAll("#text").remove();
+        d3.select("#details").selectAll("a").remove();
+        d3.select("#details").selectAll("image").remove();
+
             var i = 0;
             var linesCount;
             var lineCountDictionary = [];
@@ -376,14 +441,13 @@ d3.json("./data/unidata.json").then(function(data){
                     }
             }
             return false;
-        }
-            
+        }  
             for (var key in d.data) {
                 if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
                     i = i + 1;
                     var linkDistance = 15;
                     var tooltipRow = tooltipDetails.append("g")           
-        // text formatting arc clicked
+        
                         .attr("transform", function(){
                             if //check if there has been a multiliner in headline
                             (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
@@ -462,7 +526,15 @@ d3.json("./data/unidata.json").then(function(data){
                             .attr("xlink:href", function(d){return url;})
                             .append("text")
                             .text(function(d) {return url;})
-                            .style("font-size", "15px")    
+                            .style("font-size", "15px")  
+                            .style("fill", "blue")
+                    } else if (key == "bild"){
+                        var filepath = d.data[key]
+                        tooltipRow.append("image")
+                         .attr('width', 200)
+                         .attr('y', imgDistance)
+                         .attr("xlink:href", filepath)
+                         console.log(filepath) 
                     } else {   
                     tooltipRow.select("text")
                                 .style("font-size", function(){
@@ -492,8 +564,9 @@ d3.json("./data/unidata.json").then(function(data){
                                     //console.log( key + linesCount)
                                     lineCountDictionary.push(linesCount);
                                 })
-                            }
-                }
+                    }
+                    
+            }
             
             }   
         })
@@ -653,41 +726,40 @@ d3.json("./data/unidata.json").then(function(data){
             var current = d3.select(this).attr("textName");
             var coops = d3.select(this).attr("textCoop");
             var fb_profs = d3.select(this).attr("text_fb_profs");
-
-            console.log(d3.select(this).style("font-weight"))
        
-        //reset to normal 
-        if (d3.select(this).style("font-weight") == 700){ 
-                d3.select("#details").selectAll("#text").remove();
-                d3.select("#details").selectAll("a").remove();
-                console.log("text: reset to normal")
-                d3.selectAll("path").style('opacity', 1)
-                d3.selectAll(".nameText").style('opacity', 1)
-                d3.selectAll(".nameText").style('font-weight', "normal")
-                return;}
+            //reset to normal 
+            if (d3.select(this).style("font-weight") == 700){ 
+                    d3.select("#details").selectAll("#text").remove();
+                    d3.select("#details").selectAll("a").remove();
+                    d3.select("#details").selectAll("image").remove();
+                    console.log("text: reset to normal")
+                    d3.selectAll("path").style('opacity', 1)
+                    d3.selectAll(".nameText").style('opacity', 1)
+                    d3.selectAll(".nameText").style('font-weight', "normal")
+                    return;}
 
-        // filter, change opa of the items that are not selected
-        else if (d3.select(this).style("font-weight") == 400) { 
-                console.log("make bold and highlight")
-                d3.selectAll("path").style("opacity", 0.99)
-                        .filter(function(d) {
-                            if (coops != null){  
-                                //console.log("text: coops")
-                                var fadedArcs = d3.select(this).attr("name") != current &&
-                                coops.includes(d3.select(this).attr("name")) == false;                          
-                                return fadedArcs; 
-                            } else if (fb_profs != null){
-                                //console.log("text: profs")
-                                var fadedArcs = d3.select(this).attr("name") != current &&
-                                fb_profs.includes(d3.select(this).attr("name")) == false;                          
-                                return fadedArcs; 
-                            } else { 
-                                var fadedArcs = d3.select(this).attr("name") != current;
-                                console.log("text: no coops or no profs");   
-                                return fadedArcs;
-                            };
-                        })
-                        .style('opacity', 0.3)
+            // filter, change opa of the items that are not selected
+            else if (d3.select(this).style("font-weight") == 400) { 
+                    console.log("make bold and highlight")
+                    d3.selectAll("path").style("opacity", 0.99)
+                            .filter(function(d) {
+                                if (coops != null){  
+                                    //console.log("text: coops")
+                                    var fadedArcs = d3.select(this).attr("name") != current &&
+                                    coops.includes(d3.select(this).attr("name")) == false;                          
+                                    return fadedArcs; 
+                                } else if (fb_profs != null){
+                                    //console.log("text: profs")
+                                    var fadedArcs = d3.select(this).attr("name") != current &&
+                                    fb_profs.includes(d3.select(this).attr("name")) == false;                          
+                                    return fadedArcs; 
+                                } else { 
+                                    var fadedArcs = d3.select(this).attr("name") != current;
+                                    console.log("text: no coops or no profs");   
+                                    return fadedArcs;
+                                };
+                            })
+                .style('opacity', 0.3)
                 ;
                 d3.selectAll(".nameText").style("opacity", 0.99)
                 .filter(function(d){
@@ -713,6 +785,7 @@ d3.json("./data/unidata.json").then(function(data){
         //tooltipdetails
         d3.select("#details").selectAll("#text").remove();
         d3.select("#details").selectAll("a").remove();
+        d3.select("#details").selectAll("image").remove();
         var i = 0;
         var linesCount;
         var lineCountDictionary = [];
@@ -809,7 +882,15 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("xlink:href", function(d){return url;})
                         .append("text")
                         .text(function(d) {return url;})
-                        .style("font-size", "15px")    
+                        .style("font-size", "15px")
+                        .style("fill", "blue")
+                } else if (key == "bild"){
+                        var filepath = d.data[key]
+                        tooltipRow.append("image")
+                         .attr('width', 200)
+                         .attr('y', imgDistance)
+                         .attr("xlink:href", filepath)
+                         console.log(filepath)
                 } else {
                 tooltipRow.select("text")
                             .style("font-size", function(){
@@ -855,8 +936,9 @@ d3.json("./data/unidata.json").then(function(data){
             var lineCount = arcLineCountDictionary[d.data.name];
             var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
             // inner text ring 
-            if (d.ringIndex == 1){
-                    return "9"};
+            if (d.ringIndex == 1 && i <= (ringItemCount / 2)){
+                    return "15"
+                };
             //upper
             if(i <= ringItemCount/4 || i >= ringItemCount * 3/4){
                 if(d.ringIndex > 1 && lineCount == 1){
@@ -872,38 +954,46 @@ d3.json("./data/unidata.json").then(function(data){
                 };
                 if (d.ringIndex > 1 && lineCount > 1)
                 {return 2 * lineCount};
-        }
-    })
+            }
+        })
+        
 
     // ROTATE
     d3.selectAll("text")
     .attr("transform", function(d, i) {
     if (d !== undefined) {
         var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-        if (d.ringIndex == 1 && i <= ringItemCount / 2) {
+        if (d.ringIndex == 1 && i <= (ringItemCount / 2) + 1) {
             var locationData = this.getBBox();
             var centerX = locationData.x + (locationData.width / 2);
             var centerY = locationData.y + (locationData.height / 2);
-
             var result = 'translate(' + centerX + ',' + centerY + ')';
-            result += 'rotate(180)';
+            result += 'rotate(175)';
+            //175 instead of 180 to centralize
             result += 'translate(' + (-centerX) + ',' + (-centerY) + ')';
+            return result;      
+        }
+        //Centralize
+        if (d.ringIndex == 1) {
+            var result = "rotate(-6)"
             return result;
         }
     }
-    });
-
+    })
     
+
     // middle text
     gs.append("text")
         .attr("text-anchor", "middle")
-        .attr('font-size', '0.8em')
         .attr('font-family', 'arial')
         .style('fill', 'white')
         .text("Human-Centered Complex Systems")
+        .attr('font-size', '10px') //doesnt do anything???
         .each(function(d){ 
             lineCount = wrap(this, 100, 0)
         })
+
+
 })
 
 

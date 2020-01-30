@@ -6,266 +6,304 @@
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "Philosophie, TUHH, HAW, Projekt AB, PartnerA, Partner B, PartncrC, PartnerD", 
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Verteilte Systeme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Angew. Softwaretechnik",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Sicherheit",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1) Sicherheit/ Sicherheitsmgmt.",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Rechennetze",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Theoretische Inf.",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1) Theoretische Inf.)",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1) Informatikbildung)",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1) Mobile Services",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1TT) Informatik",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Wiss. Rechnen (DKRZ)",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Wiss. Visualisierung (Dir. RRZ)",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Daten Enginieering",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Simulation & Visualisierung",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Alg. Molekulares Design",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "(W1) Angewandte Bioinf.",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Rechnerg. Bioinformatik",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Maschinelles Lernen",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Autonome Systeme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1TT) Sem. Systeme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Wissenstechnologien",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Signalverarbeitung",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Bildverarbeitung",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1TT) Assistenzsysteme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Sprachverarbeitung",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Sprachtechnologie",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Multimodale Systeme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Mensch-Computer-Interaktion",
-            "profname": "Prof. A B",
+            "profname": "Prof. Dr. Frank Steinicke",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.inf.uni-hamburg.de/en/inst/ab/hci/people/steinicke.html",
+            "bild": "images/prof_steinicke.png"
         },
         {
             "name": "Usability & Softwareergonomie",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Ethik in der Informationstechnik",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "IT-Gestaltung",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "(W1TT) Wirtschaftsinformatik",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "(W1TT) Betriebssystem",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "(W1TT) Adaptive Systeme",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "IT Management",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         },
         {
             "name": "Digital Technochange",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         },
         {
             "name": "Datenbanken",
             "profname": "Prof. A B",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "",
-            "link": ""
+            "link": "",
+            "bild": ""
         }
     ],
     "Forschunsbereiche": [
@@ -273,12 +311,14 @@
         {
             "name": "Information Governance Technology",
             "Forschungsbereichsprofessuren": "ProfessurA, ProfessurB, ProfessurC",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
             },
         {
             "name": "Computing in Science/ Data Science",
             "Forschungsbereichsprofessuren": "Mensch-Computer-Interaktion",
-            "link": "https://www.uni-hamburg.de/"
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
             },
         
         {
@@ -342,142 +382,194 @@
             "name": "Wirtschafts- und Sozialwissenschaften",
             "more": "(Wirtschaftsinformatik)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"
-
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
         }, 
         {
             "name": "KNU",
             "more": "(Ethik)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
              
         {
             "name": "Rechtswissenschaften",
             "more": "ITG",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Regionales Rechenzentrum",
             "more": "RRZ",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Geowissenschaften",
             "more": "CLISAP, DKRZ",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Biologie, Chemie, Physik",
             "more": "(ZBH, BSc, CIS, MSc Bioinformatik)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Mathematik",
             "more": "(Collatz Center)",
             "Kooperationspartner": "",
-            "link": ""},
+            "link": "",
+            "bild": ""
+        },
         {
             "name": "Geistenwissenschaften",
             "more": "(SFB Manuskriptkulturen, eHumanities)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Neurowissenschaften",
             "more": "(TRR 169)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Psychologie",
             "more": "(TRR 169, BSc MCI)",
             "Kooperationspartner": "",
-            "link": ""},
+            "link": "",
+            "bild": ""
+        },
         {
             "name": "Philosophie",
             "more": "(Ethik)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Friedensforschung-ZNF",
             "more": "(Direktorium)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Betriebswirtschaftslehre",
             "more": "(Wirtschaftsinformatik, ITMC)",
             "Kooperationspartner": "",
-            "link": ""}
+            "link": "",
+            "bild": ""
+        }
     ],
     "AuKoop" : [
         {
             "name": "Kooperationsplatform ahoi.digital",
             "more": "",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "HAW",
             "more": "Informatik",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "HCU",
             "more": "Geoinformatik",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Hamburg Open Online University",
             "more": "",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Cluster",
             "more": "Medien & IT, Luftfahrt, Gesundheitswirtschaft, Life Science",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "ThSI",
             "more": "",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "DESY",
             "more": "(GR ANTRAG)",
             "Kooperationspartner": "",
-            "link": ""},
+            "link": "",
+            "bild": ""
+        },
         {
             "name": "Deutsches Klimarechenzentrum",
             "more": "(DKRZ)",
             "Kooperationspartner": "",
-            "link": ""},
+            "link": "",
+            "bild": ""
+        },
         {
             "name": "Nationale & internat. Kooperationen",
             "more": "EU, DFG, BMBF, BWMI, ERASMUS+, LFF...",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Tsinghua University Beijing/ China",
             "more": "(TRR 169)",
             "Kooperationspartner": "",
-            "link": ""},
+            "link": "",
+            "bild": ""
+        },
         {
             "name": "Universitätsklinikum Eppendorf",
             "more": "(TRR 169)",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Hans-Bredow-Institut",
             "more": "",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "Kuratorium IT-Mgmt. & -Consulting",
             "more": "test, test, test, test, test, test, test, test, test, test, test, test",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"},
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },
         {
             "name": "TUHH",
             "more": "Informatik",
             "Kooperationspartner": "",
-            "link": "https://www.uni-hamburg.de/"}
+            "link": "https://www.uni-hamburg.de/",
+            "bild": "images/TUHH_logo.png"
+        }
     ],
     "Projekte": [
         {
@@ -485,28 +577,36 @@
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte. Sollte in kurzer Form beschreiben worum es in dem Projekt geht",
             "Budget": 20000,
             "Kooperationspartner": "Softwarekonstruktion, Informatik,Philosophie",
-            "link": "https://www.uni-hamburg.de/"}, 
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        }, 
          
         {
             "name": "Projekt BC",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "Budget": 20000,
             "Kooperationspartner": "Softwarekonstruktion, Informatik",
-            "link": "https://www.uni-hamburg.de/"}, 
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        }, 
         
         {
             "name": "Projekt CD",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "Budget": 20000,
             "Kooperationspartner": "ThSI, Geisteswissenschaften, TUHH, KNU, Rechtswissenschaften",
-            "link": "https://www.uni-hamburg.de/"}, 
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        }, 
        
         {
             "name": "Projekt DE",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
             "Budget": 20000,
             "Kooperationspartner": "Sicherheit",
-            "link": "https://www.uni-hamburg.de/"} 
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        } 
         
     ]
 }
