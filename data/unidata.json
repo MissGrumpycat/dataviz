@@ -588,8 +588,7 @@
             "Kooperationspartner": "Softwarekonstruktion, Informatik",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
-        }, 
-        
+        },    
         {
             "name": "Projekt CD",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
@@ -597,8 +596,7 @@
             "Kooperationspartner": "ThSI, Geisteswissenschaften, TUHH, KNU, Rechtswissenschaften",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
-        }, 
-       
+        },      
         {
             "name": "Projekt DE",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
@@ -606,7 +604,23 @@
             "Kooperationspartner": "Sicherheit",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
-        } 
+        },      
+        {
+            "name": "Projekt EF",
+            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "Budget": 20000,
+            "Kooperationspartner": "Sicherheit",
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        },      
+        {
+            "name": "Projekt FG",
+            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
+            "Budget": 20000,
+            "Kooperationspartner": "Sicherheit",
+            "link": "https://www.uni-hamburg.de/",
+            "bild": ""
+        }
         
     ]
 }

@@ -9,12 +9,58 @@ var svg = d3.select("#pie-chart svg")
     .attr("height", height + margin.top + margin.bottom)
     .attr("transform", "translate(" + 525 + "," + 450 + ")")
     .append("g")
-
-/*gives the same numeric value to every object in the datafile (cuz they dont have numeric values) */     
+   
 var pie = d3.pie()
     .value(function(d){return 1}); 
 
-// Colors       
+
+/* 
+-----------------Font-size settings-----------------
+use if-case for font-size unaffected by itemcount per ring, 
+use switch-case to decrease font-size automatically when changing the json file
+px-Change determines by how much the font decreased per item added (item added * pxChange)
+*/
+
+//set Font-sizes
+var innerRingtxt_size = 9;
+var outerRingstxt_size = 13;
+
+//single ring-fontsizes saved in array
+var newTextFonts = [];
+var maxItems = 13;
+var pxChange = 0.25;
+
+
+var fontSizeSettings = function(d){
+    // ring 2-6 same size - unaffected by itemamount
+    // Comment out to use ring-specific font-sizes 
+    // /*
+    if(d.ringIndex > 1){
+        return outerRingstxt_size + "px"
+    } else {
+        return innerRingtxt_size + "px";
+    }
+    // */
+
+    //if itemamount increases over maxItems items, decreases font-size for specific circle   
+    switch(d.ringIndex){
+        case 1:
+            return newTextFonts[1];
+        case 2:
+            return newTextFonts[2];
+        case 3:
+            return newTextFonts[3];
+        case 4:
+            return newTextFonts[4];
+        case 5:
+            return newTextFonts[5];
+        case 6:
+            return newTextFonts[6];    
+    }
+
+}
+
+// RingcoloursColors       
 var colorLeitsatz = '#3b515b';
 colorProfessuren = '#5EADBF',
 colorSchwerpunkte = '#BF8888',
@@ -115,11 +161,7 @@ d3.json("./data/unidata.json").then(function(data){
             return ring;
             })
             .attr("class", "legend")
-            .attr("text-anchor", function(){
-                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
-                    return "start";
-                }  return "start"
-            })
+            .attr("text-anchor", "start")
             .attr("dx", function(){
                 if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
                     return "-38";
@@ -132,7 +174,8 @@ d3.json("./data/unidata.json").then(function(data){
             })
             .style("font-size", function (){
                 if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
-                    return "13px"} 
+                    return "13px"
+                } 
                     return "15px"
             })
             .style("font-weight", function (){
@@ -301,7 +344,7 @@ d3.json("./data/unidata.json").then(function(data){
     */
 
     var arcIndexDictionary = {};
-    var arcRingIndexSizeDictionary = {};
+    var arcRingIndexSizeDictionary = [];
     var arcLineCountDictionary = {};
 
     // Visible arc
@@ -560,7 +603,7 @@ d3.json("./data/unidata.json").then(function(data){
                                         return d.data[key]               
                                 })
                                 .each(function(d){
-                                    linesCount = wrap(this, 250, 0)
+                                    linesCount = wrap(this, 220, 0)
                                     //console.log( key + linesCount)
                                     lineCountDictionary.push(linesCount);
                                 })
@@ -648,7 +691,91 @@ d3.json("./data/unidata.json").then(function(data){
         // +1 because if there are no tspans word itself is a line
         return lineconstant + 1;
     }
-    
+
+    //calculating the font-size when number of elemnts changes in the rings
+    var startItemNumbers = [0, 37, 2, 8, 12, 13, 3],
+    currentRingItemCount = arcRingIndexSizeDictionary,
+    arrayLength = currentRingItemCount.length,
+    r1_FontSize = innerRingtxt_size,
+    r2_FontSize = outerRingstxt_size,
+    r3_FontSize = outerRingstxt_size,
+    r4_FontSize = outerRingstxt_size,
+    r5_FontSize = outerRingstxt_size,
+    r6_FontSize = outerRingstxt_size;
+
+
+
+    function decrease(ringFS){
+        var newFontSize = ringFS - (itemDiff * pxChange);
+        return newFontSize;
+    }
+
+    function noChange(ringFS){
+        switch(ringFS){
+            case 1:
+                return r1_FontSize;
+            case 2: 
+                return r2_FontSize;
+            case 3:
+                return r3_FontSize;
+            case 4: 
+                return r4_FontSize;
+            case 5:
+                return r5_FontSize;
+            case 6: 
+                return r6_FontSize;
+            }
+    }
+
+    var getFontSize = function(i){
+        if (currentRingItemCount[i] < startItemNumbers[i]){
+            console.log("Items in ring" + i + " decreased")
+            return noChange(i);
+        } else if (currentRingItemCount[i] > startItemNumbers[i]) {
+            console.log("Items in ring" + i + " increased")
+            itemDiff = currentRingItemCount[i] - startItemNumbers[i]; 
+            if (currentRingItemCount[i] > maxItems){
+                return nochange(i);
+            } else {
+                switch(i){
+                    case 1:
+                        r1_FontSize = decrease(r1_FontSize);
+                        return r1_FontSize;
+                    case 2: 
+                        r2_FontSize = decrease(r2_FontSize);
+                        return r2_FontSize;
+                    case 3:
+                        r3_FontSize = decrease(r3_FontSize);
+                        return r3_FontSize;
+                        break;
+                    case 4: 
+                        r4_FontSize = decrease(r4_FontSize);
+                        return r4_FontSize;
+                    case 5:
+                        r5_FontSize = decrease(r5_FontSize);
+                        return r5_FontSize;
+                    case 6: 
+                        r6_FontSize = decrease(r6_FontSize);
+                        return r6_FontSize;
+                }  
+            }  
+            
+        } else if (currentRingItemCount[i] == startItemNumbers[i]){
+            console.log("Items in ring" + i + " stayed the same")
+            return noChange(i);
+    }
+    }
+
+    function getNewFontSizeArray(){
+            newTextFonts.push(0)
+            var i;
+            for (i = 1; i < arrayLength; i++){
+                var newFontSize = getFontSize(i);
+                newTextFonts.push(newFontSize + "px");
+            }       
+            return newTextFonts;    
+    }
+    getNewFontSizeArray();
             
     // Placing text
     gs.selectAll(".nameText")
@@ -687,8 +814,7 @@ d3.json("./data/unidata.json").then(function(data){
                 if(i > ringItemCount/4 && i < ringItemCount * 3/4)
                     return "17%"; 
                 return "25%";
-            }) 
-        
+            })      
         .attr("textName", function(d) {
             return d.data.name
         })
@@ -704,9 +830,8 @@ d3.json("./data/unidata.json").then(function(data){
             })
             .style('font-family', 'arial')
             .attr('font-size', function(d){
-                if(d.ringIndex > 1){return '13px'} else {
-                    return '9px';
-                }})
+                return fontSizeSettings(d);
+                })
         .each(function(d) {
             if (d.ringIndex == 1){
                 var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
@@ -916,7 +1041,7 @@ d3.json("./data/unidata.json").then(function(data){
                                     return d.data[key]               
                             })
                             .each(function(d){
-                                linesCount = wrap(this, 250, 0)
+                                linesCount = wrap(this, 220, 0)
                                 //console.log( key + linesCount)
                                 lineCountDictionary.push(linesCount);
                             })
@@ -992,7 +1117,7 @@ d3.json("./data/unidata.json").then(function(data){
         .each(function(d){ 
             lineCount = wrap(this, 100, 0)
         })
-
+    ;
 
 })
 
