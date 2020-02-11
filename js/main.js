@@ -59,9 +59,7 @@ var fontSizeSettings = function(d){
 
 }
 
-/*
----------------------Language-Settings----------------------------
-*/
+/* ---------------------Language-Settings----------------------------*/
 
 var dataFile = "./data/unidata.json";
 /* In case some textfield are very long, a new key-value pair should be added below: "Langertext": ".", otherwise
@@ -75,6 +73,17 @@ var ringsEnglish = ["Professorships", "Focus", "BA/MA degree courses", "Intramur
 
 var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", 
 "Außeruniversitäre Kooperationen", "Projekte", "Alle anzeigen", "Alle verbergen"];
+
+
+ /*--------------------------Colors------------------------------ */ 
+
+var colorLeitsatz = '#3b515b';
+colorProfessuren = '#5EADBF',
+colorSchwerpunkte = '#BF8888',
+colorStudiengaenge = '#D96B62',
+colorInKoop = '#F25041',
+colorAuKoop = '#e2001a',
+colorProjekte = '#c90018';
 
 var ringColorLegendFunction = function(ring){
     switch (ring) {
@@ -98,16 +107,6 @@ var ringColorLegendFunction = function(ring){
             return colorProjekte;
         } 
 };
- /* -------------------------------------------------------------- */
-
-// COLORS       
-var colorLeitsatz = '#3b515b';
-colorProfessuren = '#5EADBF',
-colorSchwerpunkte = '#BF8888',
-colorStudiengaenge = '#D96B62',
-colorInKoop = '#F25041',
-colorAuKoop = '#e2001a',
-colorProjekte = '#c90018';
 
  // set COLORs for each ring
 var colorRingFunction = function(i){
@@ -129,11 +128,12 @@ var colorRingFunction = function(i){
         } 
 };
 
-//load data
+
 /* ---------------DATA LOADING & the graph----------------------- 
 switch filepath to english jason file to display all the names in english */
-d3.json(dataFile).then(function(data){
-    //console.log(data);  
+//load data
+d3.json(dataFile).then(function(data){ 
+  
     var arc = d3.arc();
 
     var gs = svg.selectAll("g")
@@ -142,7 +142,7 @@ d3.json(dataFile).then(function(data){
                 .append("g")
                 .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
-/*    --------Tooltip for readibility and abbreviations/ extra Information ------- */
+/* ----------Tooltip for readibility and abbreviations/ extra Information ------- */
     // init tooltip
     var tip = d3.tip()
                 .attr('class', 'd3-tip')
@@ -167,9 +167,8 @@ d3.json(dataFile).then(function(data){
 
     // call tooltip
     gs.call(tip);
-/* ----------------------------------------- */
 
-/* ---------------legend & ring-filter---------------- */
+/* ---------------legend & ring-filter-function---------------- */
 
     var legend = svg.append("g")
                     .attr("transform", "translate(" + (width - 1545) + 
@@ -404,20 +403,35 @@ d3.json(dataFile).then(function(data){
 
 /* ------------------------------------------ */
 
-    //tooltipdetails
+    //tooltipdetails init
     var tooltipDetails = svg.append("g")
                             .attr("transform", "translate(" + (width - 560) + 
                             "," + (height - 1420) + ")")
                             .attr('id', 'details')
     ;
     var imgDistance = 20;
-    var linkDistance = 15;
+    var linkDistance = 15;     
+    
+    // prevents itemdetails to stack
+    function removeItemDetails(){
+    d3.select("#details").selectAll("#text").remove();
+    d3.select("#details").selectAll("a").remove();
+    d3.select("#details").selectAll("image").remove();
+    }
 
-                    
+    // clicking on an arc/ text resets it bak to normal state
+    function resetToNormal(){
+        d3.select("#details").selectAll("#text").remove();
+        d3.select("#details").selectAll("a").remove();
+        d3.select("#details").selectAll("image").remove();
+        d3.selectAll("path").style('opacity', 1)
+        d3.selectAll(".nameText").style('opacity', 1)
+        d3.selectAll(".nameText").style('font-weight', "normal")
+    }
                             
-    /* --------------------- the graph ------------------*/
+/* --------------------- the graph ------------------*/
 
-    //dictionary is used to store the center point of all the visible arcs so it can be used later to create hidden ones 
+    // dictionary is used to store the center point of all the visible arcs so it can be used later to create hidden ones 
     // formula is : (innerRadius + outerRadius) / 2
     var arcIndexDictionary = {};
     var arcRingIndexSizeDictionary = [];
@@ -496,13 +510,7 @@ d3.json(dataFile).then(function(data){
                             
             // remove itemdetails and reset to normal
             if (d3.select(this).style('opacity') == 0.99){
-                d3.select("#details").selectAll("#text").remove();
-                d3.select("#details").selectAll("a").remove();
-                d3.select("#details").selectAll("image").remove();
-                d3.selectAll("path").style('opacity', 1);
-                d3.selectAll(".nameText").style('opacity', 1);
-                d3.selectAll(".nameText").style('font-weight', "normal");
-                return;
+                return resetToNormal();
             } 
                         
             // filter, change opa of the items that are not selected
@@ -513,130 +521,128 @@ d3.json(dataFile).then(function(data){
                             var fadedArcs = d3.select(this).attr("name") != current &&
                             coops.includes(d3.select(this).attr("name")) == false;
                             return fadedArcs; 
-                            } else if (fb_profs != null){
-                                var fadedArcs = d3.select(this).attr("name") != current &&
-                                fb_profs.includes(d3.select(this).attr("name")) == false;
-                                return fadedArcs; 
-                                }
-                                else { 
-                                    //console.log(fb_profs)
-                                    var fadedArcs = d3.select(this).attr("name") != current;
-                                    //console.log("No cooperations or fb_profs found");
-                                    return fadedArcs;
-                                };
-                            })
+                        } else if (fb_profs != null){
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            fb_profs.includes(d3.select(this).attr("name")) == false;
+                            return fadedArcs; 
+                        } else { 
+                            var fadedArcs = d3.select(this).attr("name") != current;
+                            //console.log("No cooperations or fb_profs found");
+                            return fadedArcs;
+                        };
+                    })
                     .style('opacity', 0.3)
                 ;  
+
                 d3.selectAll(".nameText")
                     .style('opacity', 0.99)
                     .filter(function(d){
                     if (coops != null){
-                    var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
-                    return fadedArcs;
-                } else if (fb_profs != null){
-                    var fadedArcs = fb_profs.includes(d.data.name) == false && (d.data.name != current)
-                    return fadedArcs; 
-                } else {
+                        var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
+                        return fadedArcs;
+                    } else if (fb_profs != null){
+                        var fadedArcs = fb_profs.includes(d.data.name) == false && (d.data.name != current)
+                        return fadedArcs; 
+                    } else {
                         return d.data.name != current;
                     }
-                })
-                .style('opacity', 0.3) 
+                    })
+                    .style('opacity', 0.3) 
             } 
 
-        d3.select("#details").selectAll("#text").remove();
-        d3.select("#details").selectAll("a").remove();
-        d3.select("#details").selectAll("image").remove();
+            removeItemDetails();
 
-        /* ----------- Text-formatting Itemdetails ARC click-event------ */
-        var i = 0;
-        var linesCount;
-        var totalLinesCount = 0;
 
-       // print each the content of each data-entry-key below each other
-        function formatItemDetails(){for (var key in d.data) {
-            if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
-                i = i + 1;
-                var tooltipRow = tooltipDetails.append("g")           
-                .attr("transform", function(){
-                    if ( key == "link"){
-                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
-                    }else{
-                        return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
-                    }
-                });
 
-                tooltipRow.append("text")
-                        .attr("id", "text")
-                        .attr("x", -20)
-                        .attr("y", 15)
-                        .attr("text-anchor", "start")
-                        .style("font-size", "15px")
-                        .text("")
-                ; 
-                    
-                if (key == "link"){
-                    //console.log(d.data[key])
-                    var url = d.data[key]
-                    tooltipRow.append("a")
-                        .attr("xlink:href", function(d){return url;})
-                        .append("text")
-                        .text(function(d) {return url;})
-                        .style("font-size", "15px")  
-                        .style("fill", "blue")
-                    } else if (key == "bild"){
-                        var filepath = d.data[key]
-                        tooltipRow.append("image")
-                         .attr('width', 200)
-                         .attr('y', imgDistance)
-                         .attr("xlink:href", filepath)
-                         console.log(filepath) 
-                    } else {   
-                    tooltipRow.select("text")
-                        .style("font-size", function(){
-                            if (key == "name"){
-                                return "18px";
-                            }else {
-                                return "15px";
-                            }
-                        })
-                        .attr("fill", function() {
-                            if (key == "name"){
-                                return colorRingFunction(d.ringIndex);
-                            }})
-                            .style("font-weight", function(){
+/* ----------- ARC click-event : Text-formatting Itemdetails ----- */
+            var i = 0;
+            var linesCount;
+            var totalLinesCount = 0;
+
+            // print each the content of each data-entry-key below each other
+            function formatItemDetails(){for (var key in d.data) {
+                if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                    i = i + 1;
+                    var tooltipRow = tooltipDetails.append("g")           
+                    .attr("transform", function(){
+                        if ( key == "link"){
+                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
+                        }else{
+                            return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
+                        }
+                    });
+
+                    tooltipRow.append("text")
+                            .attr("id", "text")
+                            .attr("x", -20)
+                            .attr("y", 15)
+                            .attr("text-anchor", "start")
+                            .style("font-size", "15px")
+                            .text("")
+                    ; 
+                        
+                    if (key == "link"){
+                        //console.log(d.data[key])
+                        var url = d.data[key]
+                        tooltipRow.append("a")
+                            .attr("xlink:href", function(d){return url;})
+                            .append("text")
+                            .text(function(d) {return url;})
+                            .style("font-size", "15px")  
+                            .style("fill", "blue")
+                        } else if (key == "bild"){
+                            var filepath = d.data[key]
+                            tooltipRow.append("image")
+                            .attr('width', 200)
+                            .attr('y', imgDistance)
+                            .attr("xlink:href", filepath)
+                            console.log(filepath) 
+                        } else {   
+                        tooltipRow.select("text")
+                            .style("font-size", function(){
                                 if (key == "name"){
-                                    return "600";    
+                                    return "18px";
+                                }else {
+                                    return "15px";
                                 }
                             })
-                            .text(function(){
-                                if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren" || key == "Budget"){
-                                    if (language == "deutsch"){
-                                        return key + ": " + d.data[key] 
-                                    } else {
-                                        if (key == "Kooperationspartner"){
-                                            return "Cooperations: " + d.data[key]; 
-                                        } else if (key == "Forschungsbereichsprofessuren"){
-                                            return "Professorships: " + d.data[key];
-                                        }
-                                    } 
-                                }
-                                return d.data[key]               
-                            })
-                            .each(function(d){
-                                linesCount = wrap(this, 240, 0)
-                                console.log( key + linesCount)
-                                totalLinesCount = totalLinesCount + linesCount;
-                                console.log(totalLinesCount)
-                            })
-                    }      
-            }   
-        } 
-        }
-        
-        formatItemDetails();  
+                            .attr("fill", function() {
+                                if (key == "name"){
+                                    return colorRingFunction(d.ringIndex);
+                                }})
+                                .style("font-weight", function(){
+                                    if (key == "name"){
+                                        return "600";    
+                                    }
+                                })
+                                .text(function(){
+                                    if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren" || key == "Budget"){
+                                        if (language == "deutsch"){
+                                            return key + ": " + d.data[key] 
+                                        } else {
+                                            if (key == "Kooperationspartner"){
+                                                return "Cooperations: " + d.data[key]; 
+                                            } else if (key == "Forschungsbereichsprofessuren"){
+                                                return "Professorships: " + d.data[key];
+                                            }
+                                        } 
+                                    }
+                                    return d.data[key]               
+                                })
+                                .each(function(d){
+                                    linesCount = wrap(this, 240, 0)
+                                    console.log( key + linesCount)
+                                    totalLinesCount = totalLinesCount + linesCount;
+                                    console.log(totalLinesCount)
+                                })
+                        }      
+                }   
+            } 
+            }
+
+            formatItemDetails();  
     });
 
- /* ---------------------------------- */
 
  /* ------------ formatting text-labels on arc ---- */
 
@@ -681,8 +687,222 @@ d3.json(dataFile).then(function(data){
         )
         .attr("fill", "none");
 
-    var lineconstant;
+     
+    /* ------------- Arclabel-Text ---------*/
+    // Placing text
+    gs.selectAll(".nameText")
+        .data(function(d,i) {       
+            return pie(d).map(function(e){e.ringIndex = i; return e});
+        })
+        .enter()
+        .append("text")
+            .attr("class", "nameText")  
+            .attr('dy', function(d, i, array){
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
+        }) 
+        .append("textPath")
+            .attr("xlink:href",function(d, i, array){
+                if (d.ringIndex > 1) 
+                    {return "#" + d.data.name + "textArc_"+i} 
+                else {
+                    return "#" + d.data.name + "nameArc_"+i+i;
+                };
+        })
+        .style("text-anchor", function(d, i){
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];    
+	        if(d.ringIndex == 1 && i <= ringItemCount/2)
+	            return "start"; 
+            if (d.ringIndex > 1) {
+                return "middle"; 
+            } else {
+                return "start";
+            }
+        })
+        .attr("startOffset", function(d, i){ 
+            if(d.ringIndex == 1 && i <= ringItemCount/2) 
+	            return "50%"; 
+            if(d.ringIndex == 1) 
+                return "12%";   
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
+            if(i > ringItemCount/4 && i < ringItemCount * 3/4)
+                return "17%"; 
+            return "25%";
+        })      
+        .attr("textName", function(d) {
+            return d.data.name
+        })
+        .attr("textCoop", function(d) {
+            return d.data.Kooperationspartner
+        })
+        .attr("text_fb_profs", function(d) {
+            return d.data.Forschungsbereichsprofessuren
+        })
+        .text(function(d, i, array){ 
+            if (d.ringIndex > 0){
+                return d.data.name
+            };
+        })
+        .style('font-family', 'arial')
+        .attr('font-size', function(d){
+            return fontSizeSettings(d);
+        })
+        .each(function(d) {
+            if (d.ringIndex == 1){
+                var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
+            }
+            var lineNo = wrap(this, 160, d.ringIndex);
+            arcLineCountDictionary[d.data.name] = lineNo;
+        })
+        .on("mouseover", function(d){    
+            d3.select(this).style("cursor", "pointer")
+            return tip.show(d, this)
+            })
+        .on("mouseout", function(d){
+            d3.select(this).style("cursor", "default")
+            return tip.hide(d, this)
+            }) 
+        .on("click", function(d){
+            var current = d3.select(this).attr("textName");
+            var coops = d3.select(this).attr("textCoop");
+            var fb_profs = d3.select(this).attr("text_fb_profs");
        
+            //reset to normal 
+            if (d3.select(this).style("font-weight") == 700){ 
+                return resetToNormal();
+            }
+
+            // Highlight connected items
+            else if (d3.select(this).style("font-weight") == 400) { 
+                d3.selectAll("path").style("opacity", 0.99)
+                    .filter(function(d) {
+                        if (coops != null){  
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            coops.includes(d3.select(this).attr("name")) == false;                          
+                            return fadedArcs; 
+                        } else if (fb_profs != null){
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            fb_profs.includes(d3.select(this).attr("name")) == false;                          
+                            return fadedArcs; 
+                        } else { 
+                            var fadedArcs = d3.select(this).attr("name") != current;
+                            return fadedArcs;
+                        };
+                    })
+                .style('opacity', 0.3);
+
+                d3.selectAll(".nameText").style("opacity", 0.99)
+                .filter(function(d){
+                    if (coops != null){ 
+                        var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
+                        return fadedArcs
+                    } else if (fb_profs != null){
+                            var fadedArcs = (d.data.name != current) && fb_profs.includes(d.data.name) == false;                          
+                            return fadedArcs; 
+                    } else {
+                        return d.data.name != current
+                    }
+                }).style('opacity', 0.3)
+            }
+
+        d3.selectAll(".nameText").filter(function(d){
+            return d.data.name == current
+        }).style("font-weight", "bold")
+        d3.selectAll(".nameText").filter(function(d){
+            return d.data.name != current
+        }).style("font-weight", "normal")
+
+        removeItemDetails();
+        
+/* ----------------TEXT clicked event: formatting Itemdetails Text ----------*/
+
+        var i = 0;
+        var linesCount;
+        var totalLinesCount = 0;
+
+        function formatItemDetails(){   
+            if (key == "link"){
+                //console.log(d.data[key])
+                var url = d.data[key]
+                tooltipRow.append("a")
+                    .attr("xlink:href", function(d){return url;})
+                    .append("text")
+                    .text(function(d) {return url;})
+                    .style("font-size", "15px")
+                    .style("fill", "blue")
+            } else if (key == "bild"){
+                var filepath = d.data[key]
+                tooltipRow.append("image")
+                    .attr('width', 200)
+                    .attr('y', imgDistance)
+                    .attr("xlink:href", filepath)
+                    //console.log(filepath)
+            } else {
+                tooltipRow.select("text")
+                    .style("font-size", function(){
+                        if (key == "name"){
+                            return "18px";
+                        }else {
+                            return "15px";
+                        }
+                    })
+                    .attr("fill", function() {
+                        if (key == "name"){
+                            return colorRingFunction(d.ringIndex);
+                            }
+                    })
+                    .style("font-weight", function(){
+                        if (key == "name"){
+                            return "600";   
+                        }
+                    })
+                    .text(function(){
+                        if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
+                            if (language == "deutsch"){
+                                return key + ": " + d.data[key] 
+                            } else {
+                                if (key == "Kooperationspartner"){
+                                    return "Cooperations: " + d.data[key]; 
+                                } else if (key == "Forschungsbereichsprofessuren"){
+                                    return "Professorships: " + d.data[key];
+                                }
+                            }
+                            
+                        }
+                        return d.data[key]               
+                    })
+                    .each(function(d){
+                        linesCount = wrap(this, 240, 0)
+                        totalLinesCount = totalLinesCount + linesCount;
+                    })
+        }}
+
+        for (var key in d.data) {
+            if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                i = i + 1;
+                var tooltipRow = tooltipDetails.append("g")
+                // text formatting text clicked
+                .attr("transform", function(){ 
+                    if ( key == "link"){
+                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
+                    }else{
+                        return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
+                    }
+                });
+
+                tooltipRow.append("text")
+                    .attr("id", "text")
+                    .attr("x", -20)
+                    .attr("y", 15)
+                    .attr("text-anchor", "start")
+                    .style("font-size", "15px")
+                    .text(""); 
+
+                formatItemDetails();
+            }
+        }
+    }) 
+    
+/*----------------- Text-Arc- formatting functions------------- */
     // text wrap function
     function wrap(text2, width, ringIndex) {
         var text = d3.select(text2),
@@ -714,6 +934,58 @@ d3.json(dataFile).then(function(data){
         return lineconstant + 1;
     }
 
+    // Centralize everything
+    gs.selectAll("text")
+        .attr('dy', function(d, i, array){
+            var lineCount = arcLineCountDictionary[d.data.name];
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
+            // inner text ring 
+            if (d.ringIndex == 1 && i <= (ringItemCount / 2)){
+                    return "15"
+                };
+            //upper
+            if(i <= ringItemCount/4 || i >= ringItemCount * 3/4){
+                if(d.ringIndex > 1 && lineCount == 1){
+                    return "-1";   
+                };
+                if (d.ringIndex > 1 && lineCount > 1)
+                {return -4.5 * lineCount};
+                };
+            //lower
+            if(i > ringItemCount/4 && i < ringItemCount * 3/4){
+                if(d.ringIndex > 1 && lineCount == 1){
+                    return "12";   
+                };
+                if (d.ringIndex > 1 && lineCount > 1)
+                {return 2 * lineCount};
+            }
+        })
+        
+
+    // ROTATE
+    d3.selectAll("text")
+    .attr("transform", function(d, i) {
+    if (d !== undefined) {
+        var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
+        if (d.ringIndex == 1 && i <= (ringItemCount / 2) + 1) {
+            var locationData = this.getBBox();
+            var centerX = locationData.x + (locationData.width / 2);
+            var centerY = locationData.y + (locationData.height / 2);
+            var result = 'translate(' + centerX + ',' + centerY + ')';
+            result += 'rotate(175)';
+            //175 instead of 180 to centralize
+            result += 'translate(' + (-centerX) + ',' + (-centerY) + ')';
+            return result;      
+        }
+        //Centralize
+        if (d.ringIndex == 1) {
+            var result = "rotate(-6)"
+            return result;
+        }
+    }
+    })
+
+    // Font-size calculation
     // Code for calculating the text-font-size accoring to number of items
     //calculating the font-size when number of elemnts changes in the rings
     var startItemNumbers = [0, 37, 2, 8, 12, 13, 3],
@@ -797,287 +1069,10 @@ d3.json(dataFile).then(function(data){
             return newTextFonts;    
     }
     getNewFontSizeArray();
-     
-    /* ------------- Arclabel-Text ---------*/
-    // Placing text
-    gs.selectAll(".nameText")
-        .data(function(d,i) {       
-            return pie(d).map(function(e){e.ringIndex = i; return e});
-        })
-        .enter()
-        .append("text")
-            .attr("class", "nameText")  
-            .attr('dy', function(d, i, array){
-            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-        }) 
-        .append("textPath")
-            .attr("xlink:href",function(d, i, array){
-                if (d.ringIndex > 1) 
-                    {return "#" + d.data.name + "textArc_"+i} 
-                else {
-                    return "#" + d.data.name + "nameArc_"+i+i;
-                };
-        })
-        .style("text-anchor", function(d, i){
-            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];    
-	        if(d.ringIndex == 1 && i <= ringItemCount/2)
-	            return "start"; 
-            if (d.ringIndex > 1) {
-                return "middle"; 
-            } else {
-                return "start";
-            }
-        })
-        .attr("startOffset", function(d, i){ 
-            if(d.ringIndex == 1 && i <= ringItemCount/2) 
-	            return "50%"; 
-            if(d.ringIndex == 1) 
-                return "12%";   
-            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-            if(i > ringItemCount/4 && i < ringItemCount * 3/4)
-                return "17%"; 
-            return "25%";
-        })      
-        .attr("textName", function(d) {
-            return d.data.name
-        })
-        .attr("textCoop", function(d) {
-            return d.data.Kooperationspartner
-        })
-        .attr("text_fb_profs", function(d) {
-            return d.data.Forschungsbereichsprofessuren
-        })
-        .text(function(d, i, array){ 
-            if (d.ringIndex > 0){
-                return d.data.name
-            };
-        })
-        .style('font-family', 'arial')
-        .attr('font-size', function(d){
-            return fontSizeSettings(d);
-        })
-        .each(function(d) {
-            if (d.ringIndex == 1){
-                var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
-            }
-            var lineNo = wrap(this, 160, d.ringIndex);
-            arcLineCountDictionary[d.data.name] = lineNo;
-        })
-        .on("mouseover", function(d){    
-            d3.select(this).style("cursor", "pointer")
-            return tip.show(d, this)
-            })
-        .on("mouseout", function(d){
-            d3.select(this).style("cursor", "default")
-            return tip.hide(d, this)
-            }) 
-        .on("click", function(d){
-            var current = d3.select(this).attr("textName");
-            var coops = d3.select(this).attr("textCoop");
-            var fb_profs = d3.select(this).attr("text_fb_profs");
-       
-            //reset to normal 
-            if (d3.select(this).style("font-weight") == 700){ 
-                d3.select("#details").selectAll("#text").remove();
-                d3.select("#details").selectAll("a").remove();
-                d3.select("#details").selectAll("image").remove();
-                console.log("text: reset to normal")
-                d3.selectAll("path").style('opacity', 1)
-                d3.selectAll(".nameText").style('opacity', 1)
-                d3.selectAll(".nameText").style('font-weight', "normal")
-                return;
-            }
-
-            // filter, change opa of the items that are not selected
-            else if (d3.select(this).style("font-weight") == 400) { 
-                //console.log("make bold and highlight")
-                d3.selectAll("path").style("opacity", 0.99)
-                    .filter(function(d) {
-                        if (coops != null){  
-                            //console.log("text: coops")
-                            var fadedArcs = d3.select(this).attr("name") != current &&
-                            coops.includes(d3.select(this).attr("name")) == false;                          
-                            return fadedArcs; 
-                        } else if (fb_profs != null){
-                            //console.log("text: profs")
-                            var fadedArcs = d3.select(this).attr("name") != current &&
-                            fb_profs.includes(d3.select(this).attr("name")) == false;                          
-                            return fadedArcs; 
-                        } else { 
-                            var fadedArcs = d3.select(this).attr("name") != current;
-                            //console.log("text: no coops or no profs");   
-                            return fadedArcs;
-                        };
-                    })
-                .style('opacity', 0.3);
-
-                d3.selectAll(".nameText").style("opacity", 0.99)
-                .filter(function(d){
-                    if (coops != null){ 
-                        var fadedArcs = coops.includes(d.data.name) == false && (d.data.name != current)
-                        return fadedArcs
-                    } else if (fb_profs != null){
-                            var fadedArcs = (d.data.name != current) && fb_profs.includes(d.data.name) == false;                          
-                            return fadedArcs; 
-                    } else {
-                        return d.data.name != current
-                    }
-                }).style('opacity', 0.3)
-            }
-
-        d3.selectAll(".nameText").filter(function(d){
-            return d.data.name == current
-        }).style("font-weight", "bold")
-        d3.selectAll(".nameText").filter(function(d){
-            return d.data.name != current
-        }).style("font-weight", "normal")
         
-        /* ----------------formatting Itemdetails Text - TEXT clicked event---------*/
-
-        d3.select("#details").selectAll("#text").remove();
-        d3.select("#details").selectAll("a").remove();
-        d3.select("#details").selectAll("image").remove();
-        var i = 0;
-        var linesCount;
-        var totalLinesCount = 0;
-
-        function formatItemDetails(){if (key == "link"){
-            //console.log(d.data[key])
-            var url = d.data[key]
-            tooltipRow.append("a")
-                .attr("xlink:href", function(d){return url;})
-                .append("text")
-                .text(function(d) {return url;})
-                .style("font-size", "15px")
-                .style("fill", "blue")
-        } else if (key == "bild"){
-            var filepath = d.data[key]
-            tooltipRow.append("image")
-                 .attr('width', 200)
-                 .attr('y', imgDistance)
-                 .attr("xlink:href", filepath)
-                 //console.log(filepath)
-        } else {
-            tooltipRow.select("text")
-                .style("font-size", function(){
-                    if (key == "name"){
-                        return "18px";
-                    }else {
-                        return "15px";
-                    }
-                })
-                .attr("fill", function() {
-                    if (key == "name"){
-                        return colorRingFunction(d.ringIndex);
-                        }
-                })
-                .style("font-weight", function(){
-                    if (key == "name"){
-                        return "600";   
-                    }
-                })
-                .text(function(){
-                    if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
-                        if (language == "deutsch"){
-                            return key + ": " + d.data[key] 
-                        } else {
-                            if (key == "Kooperationspartner"){
-                                return "Cooperations: " + d.data[key]; 
-                            } else if (key == "Forschungsbereichsprofessuren"){
-                                return "Professorships: " + d.data[key];
-                            }
-                        }
-                          
-                    }
-                    return d.data[key]               
-                })
-                .each(function(d){
-                    linesCount = wrap(this, 240, 0)
-                    //console.log( key + linesCount)
-                    totalLinesCount = totalLinesCount + linesCount;
-                    //console.log(totalLinesCount)
-                })
-        }}
-
-        for (var key in d.data) {
-            if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
-                i = i + 1;
-                var tooltipRow = tooltipDetails.append("g")
-                // text formatting text clicked
-                .attr("transform", function(){ 
-                    if ( key == "link"){
-                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
-                    }else{
-                        return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
-                    }
-                });
-
-                tooltipRow.append("text")
-                    .attr("id", "text")
-                    .attr("x", -20)
-                    .attr("y", 15)
-                    .attr("text-anchor", "start")
-                    .style("font-size", "15px")
-                    .text(""); 
-
-                formatItemDetails();
-            }
-        }
-    })       
-        
-    /* ----------- formatting arc-label-text -------*/
-    // Centralize everything
-    gs.selectAll("text")
-        .attr('dy', function(d, i, array){
-            var lineCount = arcLineCountDictionary[d.data.name];
-            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-            // inner text ring 
-            if (d.ringIndex == 1 && i <= (ringItemCount / 2)){
-                    return "15"
-                };
-            //upper
-            if(i <= ringItemCount/4 || i >= ringItemCount * 3/4){
-                if(d.ringIndex > 1 && lineCount == 1){
-                    return "-1";   
-                };
-                if (d.ringIndex > 1 && lineCount > 1)
-                {return -4.5 * lineCount};
-                };
-            //lower
-            if(i > ringItemCount/4 && i < ringItemCount * 3/4){
-                if(d.ringIndex > 1 && lineCount == 1){
-                    return "12";   
-                };
-                if (d.ringIndex > 1 && lineCount > 1)
-                {return 2 * lineCount};
-            }
-        })
-        
-
-    // ROTATE
-    d3.selectAll("text")
-    .attr("transform", function(d, i) {
-    if (d !== undefined) {
-        var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-        if (d.ringIndex == 1 && i <= (ringItemCount / 2) + 1) {
-            var locationData = this.getBBox();
-            var centerX = locationData.x + (locationData.width / 2);
-            var centerY = locationData.y + (locationData.height / 2);
-            var result = 'translate(' + centerX + ',' + centerY + ')';
-            result += 'rotate(175)';
-            //175 instead of 180 to centralize
-            result += 'translate(' + (-centerX) + ',' + (-centerY) + ')';
-            return result;      
-        }
-        //Centralize
-        if (d.ringIndex == 1) {
-            var result = "rotate(-6)"
-            return result;
-        }
-    }
-    })
     
-    /* --------------- most inner circle -------*/
+    
+/* --------------- most inner circle -------*/
     // middle text
     gs.append("text")
         .attr("text-anchor", "middle")
