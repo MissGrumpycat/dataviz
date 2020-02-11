@@ -34,15 +34,14 @@ var pxChange = 0.25;
 var fontSizeSettings = function(d){
     // ring 2-6 same size - unaffected by itemamount
     // Comment out to use ring-specific font-sizes 
-    // /*
     if(d.ringIndex > 1){
         return outerRingstxt_size + "px"
     } else {
         return innerRingtxt_size + "px";
     }
-    // */
 
-    //if itemamount increases over maxItems items, decreases font-size for specific circle   
+    //Item number amtters
+    //if itemamount increases over maxItems items, decreases font-size for specific circle 
     switch(d.ringIndex){
         case 1:
             return newTextFonts[1];
@@ -60,7 +59,48 @@ var fontSizeSettings = function(d){
 
 }
 
-// RingcoloursColors       
+/*
+---------------------Language-Settings----------------------------
+*/
+
+var dataFile = "./data/unidata.json";
+/* In case some textfield are very long, a new key-value pair should be added below: "Langertext": ".", otherwise
+the next line will overlap with the long text-block */
+
+// change this variableaccording to data-language;  = "deutsch" , = "english"
+// otherwise the legend won't change
+var language = "deutsch";
+
+var ringsEnglish = ["Professorships", "Focus", "BA/MA degree courses", "Intramural coopertaions", "non-university cooperations", "Projects", "Show all", "Hide all"]
+
+var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", 
+"Außeruniversitäre Kooperationen", "Projekte", "Alle anzeigen", "Alle verbergen"];
+
+var ringColorLegendFunction = function(ring){
+    switch (ring) {
+        case "Professuren":
+        case "Professorships":
+            return colorProfessuren;
+        case "Schwerpunkte":
+        case "Focus":
+            return colorSchwerpunkte;
+        case "Studiengänge":
+        case "BA/MA degree courses":
+            return colorStudiengaenge;
+        case "Inneruniversitäre Kooperationen":
+        case "Intramural coopertaions":
+            return colorInKoop;
+        case "Außeruniversitäre Kooperationen":
+        case "non-university cooperations":
+            return colorAuKoop;
+        case "Projekte":
+        case "Projects":
+            return colorProjekte;
+        } 
+};
+ /* -------------------------------------------------------------- */
+
+// COLORS       
 var colorLeitsatz = '#3b515b';
 colorProfessuren = '#5EADBF',
 colorSchwerpunkte = '#BF8888',
@@ -69,59 +109,30 @@ colorInKoop = '#F25041',
 colorAuKoop = '#e2001a',
 colorProjekte = '#c90018';
 
-//legend
-var rings = ["Professuren", "Schwerpunkte", "Studiengänge", "Inneruniversitäre Kooperationen", "Außeruniversitäre Kooperationen", "Projekte", "Alle anzeigen", "Alle verbergen"];
-
-var ringColorLegendFunction = function(ring){
-    switch (ring) {
-        case "Professuren":
-            return colorProfessuren;
-            break;
-        case "Schwerpunkte":
-            return colorSchwerpunkte;
-            break;
-        case "Studiengänge":
-            return colorStudiengaenge;
-            break;
-        case "Inneruniversitäre Kooperationen":
-            return colorInKoop;
-            break;
-        case "Außeruniversitäre Kooperationen":
-            return colorAuKoop;
-            break;
-        case "Projekte":
-            return colorProjekte;
-        } 
-};
-
+ // set COLORs for each ring
 var colorRingFunction = function(i){
     switch (i) {
         case 0:
             return colorLeitsatz;
-            break;
         case 1:
             return colorProfessuren;
-            break;
         case 2:
             return colorSchwerpunkte;
-            break;
         case 3:
             return colorStudiengaenge;
-            break;
         case 4:
             return colorInKoop;
-            break;
         case 5:
             return colorAuKoop;
-            break;
         case 6:
             return colorProjekte;
         } 
 };
 
 //load data
-d3.json("./data/unidata.json").then(function(data){
-
+/* ---------------DATA LOADING & the graph----------------------- 
+switch filepath to english jason file to display all the names in english */
+d3.json(dataFile).then(function(data){
     //console.log(data);  
     var arc = d3.arc();
 
@@ -131,28 +142,43 @@ d3.json("./data/unidata.json").then(function(data){
                 .append("g")
                 .attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
 
+/*    --------Tooltip for readibility and abbreviations/ extra Information ------- */
     // init tooltip
     var tip = d3.tip()
                 .attr('class', 'd3-tip')
                 .html(function(d) {
-                    var text = "<strong> <span style='color:white'>" + d.data.name + "</strong></span><br>" + "<br>";
+                    var text = "<strong> <span style='color:white'>" + d.data.name + "</strong></span><br>";
+                    if (d.ringIndex == 1){
+                      text +=  "<font size= 2>" + d.data.profname + "<br>" + "<br>"
+                    }
+                    if (d.ringIndex == 3){
+                        text +=  "<font size= 2>" + d.data.Studienabschluss + "<br>" + "<br>"
+                      }
+                    if (d.ringIndex == 4 || d.ringIndex == 5){
+                        if (d.data.more != ""){
+                            text +=  "<font size= 2>" + d.data.more + "<br>" + "<br>"
+                        }
+                    }
                     text += "<font size= 2>" + "Anklicken für mehr Info" + "</font>";                  
                     return text;
                 })
                 .direction('e')
-                ;
+;
 
     // call tooltip
     gs.call(tip);
+/* ----------------------------------------- */
 
-    //Legend & filter for rings
+/* ---------------legend & ring-filter---------------- */
+
     var legend = svg.append("g")
                     .attr("transform", "translate(" + (width - 1545) + 
                         "," + (height - 1425) + ")");
 
     var linesLegendCount;
 
-    rings.forEach(function(ring, i){
+    function displayLegend(ring, i){
+        
         var legendRow = legend.append("g")
             .attr("transform", "translate(" + 0 + " ," + (i * 40) + ")")
 
@@ -163,33 +189,40 @@ d3.json("./data/unidata.json").then(function(data){
             .attr("class", "legend")
             .attr("text-anchor", "start")
             .attr("dx", function(){
-                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen" || ring == "Show all" || ring == "Hide all"){
                     return "-38";
                 }
             })
             .attr("dy", function(){
-                if (ring == "Alle verbergen"){
+                if (ring == "Alle verbergen" || ring == "Hide all" ){
                     return "-12";
                 }
             })
             .style("font-size", function (){
-                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen" || ring == "Show all" || ring == "Hide all"){
                     return "13px"
                 } 
                     return "15px"
             })
             .style("font-weight", function (){
-                if (ring == "Alle anzeigen" || ring == "Alle verbergen"){
+                if (ring == "Alle anzeigen" || ring == "Alle verbergen" || ring == "Show all" || ring == "Hide all"){
                     return "bold"}
             })
             .on("click", function(){
 
                 var current = d3.select(this).attr("name")
-                var currenRingIndex = rings.indexOf(current) + 1
+                if (language == "deutsch"){
+                   var currentRingindex = rings.indexOf(current) + 1 
+                } else {
+                    var currentRingindex = ringsEnglish.indexOf(current) + 1 
+                }
                 var setOpacity = 0.2;
+
+                console.log(current)
+                console.log(currentRingindex)
                 
                 //show all
-                if (d3.select(this).attr("name") == "Alle anzeigen"){
+                if (d3.select(this).attr("name") == "Alle anzeigen" || d3.select(this).attr("name") == "Show all"){
                     d3.selectAll("path").style("opacity", 1);
                     d3.selectAll(".nameText").style('opacity', 1);
                     d3.selectAll(".legend").style("opacity", 1);
@@ -197,16 +230,18 @@ d3.json("./data/unidata.json").then(function(data){
                 }
 
                 //hide all
-                if (d3.select(this).attr("name") == "Alle verbergen"){
+                if (d3.select(this).attr("name") == "Alle verbergen" || d3.select(this).attr("name") == "Hide all"){
                     
+                    // hiode all but the inner most ring
                     d3.selectAll("path").filter(function(d){
                         var fadedRing = d3.select(this).attr("ringindex") > 0;
-                        return fadedRing}).style("opacity", setOpacity);
+                        return fadedRing
+                    }).style("opacity", setOpacity);
 
                     d3.selectAll(".nameText").style('opacity', setOpacity);
 
                     d3.selectAll(".legend").filter(function(d){
-                        var fadedLegend = d3.select(this).attr("name") != "Alle anzeigen";
+                        var fadedLegend = d3.select(this).attr("name") != "Alle anzeigen" || d3.select(this).attr("name") != "Show all";
                         return fadedLegend
                     }).style("opacity", 0.5);
 
@@ -214,32 +249,48 @@ d3.json("./data/unidata.json").then(function(data){
                 }
 
                 // blend out the circles
-                if (d3.select(this).attr("name") == current && d3.select(this).attr("name") != "Alle anzeigen"
-                && d3.select(this).attr("name") != "Alle verbergen"){
+                if (d3.select(this).attr("name") == current && (d3.select(this).attr("name") != "Alle anzeigen" || d3.select(this).attr("name") != "Show all")
+                && (d3.select(this).attr("name") != "Alle verbergen" || d3.select(this).attr("name") != "Hide all")){
                     
                     d3.selectAll("path").filter(function(d) {
-                        var fadedRing = d3.select(this).attr("ringindex") == currenRingIndex;
+                        var fadedRing = d3.select(this).attr("ringindex") == currentRingindex;
                         return fadedRing;
                     }).style("opacity", function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }
                     });
                     
                     d3.selectAll(".nameText").filter(function(d){
-                        var fadedText = d.ringIndex == currenRingIndex
+                        var fadedText = d.ringIndex == currentRingindex
                         return fadedText;
                     }).style('opacity', function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }});
 
                     d3.select(this).style("opacity", function(){
                         if (d3.select(this).style("opacity") == 1 && d3.select(this).attr("name") == current) 
-                        {return 0.5} 
-                        else {return 1}})
+                        {
+                            return 0.5
+                        } 
+                        else {
+                            return 1
+                        }})
 
                     d3.selectAll(".legendRect").filter(function(d){
                         var fadedRects = d3.select(this).attr("rectname") == current
                         return fadedRects;
                     }).style('opacity', function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }});
                 };
                 
                 
@@ -252,7 +303,7 @@ d3.json("./data/unidata.json").then(function(data){
             })
             .text(ring)
             .each(function(d){ 
-                linesLegendCount = wrap(this, 200, 0)
+                linesLegendCount = wrap(this, 150, 0)
             })
             .attr("y", function(){
                 if (linesLegendCount == 2){
@@ -269,11 +320,12 @@ d3.json("./data/unidata.json").then(function(data){
             .attr("width", 22)
             .attr("height", 22)
             .attr("fill", function(){
-               if (ring != "Alle anzeigen" && ring != "Alle verbergen"){
+               if (ring != "Alle anzeigen" && ring != "Alle verbergen" && ring != "Show all" && ring != "Hide all"){
                 return ringColorLegendFunction(ring)
-               } else { return "None"} 
-                }
-            )
+               } else { 
+                   return "None"
+                } 
+            })
             .on("mouseover", function(d){
                 d3.select(this).style("cursor", "pointer")
             })
@@ -283,24 +335,36 @@ d3.json("./data/unidata.json").then(function(data){
             .on("click", function(){
 
                 var current = d3.select(this).attr("rectname")
-                var currenRingIndex = rings.indexOf(current) + 1
+                if (language == "deutsch"){
+                    var currentRingindex = rings.indexOf(current) + 1 
+                } else {
+                     var currentRingindex = ringsEnglish.indexOf(current) + 1 
+                }
                 var setOpacity = 0.2;
 
                 // blend out the circles
                 if (d3.select(this).attr("rectname") == current){
                     //console.log(d3.select(this).attr("rectname"))
                     d3.selectAll("path").filter(function(d) {
-                        var fadedRing = d3.select(this).attr("ringindex") == currenRingIndex;
+                        var fadedRing = d3.select(this).attr("ringindex") == currentRingindex;
                         return fadedRing;
                     }).style("opacity", function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }
                     });
                     
                     d3.selectAll(".nameText").filter(function(d){
-                        var fadedText = d.ringIndex == currenRingIndex
+                        var fadedText = d.ringIndex == currentRingindex
                         return fadedText;
                     }).style('opacity', function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }});
 
                     d3.select(this).style("opacity", function(){
                         if (d3.select(this).style("opacity") == 1 && d3.select(this).attr("rectname") == current) {
@@ -315,13 +379,30 @@ d3.json("./data/unidata.json").then(function(data){
                         var fadedRects = d3.select(this).attr("name") == current
                         return fadedRects;
                     }).style('opacity', function(d) {
-                        if (d3.select(this).style("opacity") == 1) {return setOpacity} else {return 1}});
+                        if (d3.select(this).style("opacity") == 1) {
+                            return setOpacity
+                        } else {
+                            return 1
+                        }});
                 };
                 
                 
             }) 
-    });
+    
 
+    }
+    
+    if (language == "deutsch"){
+        rings.forEach(function(ring, i){
+            displayLegend(ring, i);
+        });  
+    } else {
+        ringsEnglish.forEach(function(ring, i){ 
+            displayLegend(ring, i);
+        }); 
+    }
+
+/* ------------------------------------------ */
 
     //tooltipdetails
     var tooltipDetails = svg.append("g")
@@ -329,20 +410,15 @@ d3.json("./data/unidata.json").then(function(data){
                             "," + (height - 1420) + ")")
                             .attr('id', 'details')
     ;
-
     var imgDistance = 20;
+    var linkDistance = 15;
 
                     
                             
-    // the graph
-    /*every datapath gets also an ringIndex
-    each arc/path will be filled according to the ringindex
-    d attr defines a path to be drawn, every path has its own innder and outer radius due to the ringindex
-    event listeners for tooltip
-    dictionary is used to store the center point of all the visible arcs so it can be used later to create hidden ones 
-    formula is : (innerRadius + outerRadius) / 2
-    */
+    /* --------------------- the graph ------------------*/
 
+    //dictionary is used to store the center point of all the visible arcs so it can be used later to create hidden ones 
+    // formula is : (innerRadius + outerRadius) / 2
     var arcIndexDictionary = {};
     var arcRingIndexSizeDictionary = [];
     var arcLineCountDictionary = {};
@@ -356,7 +432,7 @@ d3.json("./data/unidata.json").then(function(data){
         .append("path")
         .attr("class", "nameArc")
         .attr("id", function(d,i) { 
-            return d.data.name + "nameArc_"+i+i; //if d.ringIndex added inner ring text vanishes???
+            return d.data.name + "nameArc_"+i+i;
         })
         .attr("d", 
             function(d, i) {
@@ -418,37 +494,38 @@ d3.json("./data/unidata.json").then(function(data){
                 return d.data.name != current
             }).style("font-weight", "normal")
                             
+            // remove itemdetails and reset to normal
             if (d3.select(this).style('opacity') == 0.99){
-                    d3.select("#details").selectAll("#text").remove();
-                    d3.select("#details").selectAll("a").remove();
-                    d3.select("#details").selectAll("image").remove();
-                    d3.selectAll("path").style('opacity', 1);
-                    d3.selectAll(".nameText").style('opacity', 1);
-                    d3.selectAll(".nameText").style('font-weight', "normal");
-                    return;} 
+                d3.select("#details").selectAll("#text").remove();
+                d3.select("#details").selectAll("a").remove();
+                d3.select("#details").selectAll("image").remove();
+                d3.selectAll("path").style('opacity', 1);
+                d3.selectAll(".nameText").style('opacity', 1);
+                d3.selectAll(".nameText").style('font-weight', "normal");
+                return;
+            } 
                         
             // filter, change opa of the items that are not selected
             if (d3.select(this).style('opacity') == 0.3 || d3.select(this).style('opacity') == 1) {
-                d3.selectAll("path")
-                            .style('opacity', 0.99)
-                            .filter(function(d) {
-                                if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
+                d3.selectAll("path").style('opacity', 0.99)
+                    .filter(function(d) {
+                        if (coops != null){   // if there arent coops it mfades everything, otheriwse not clickable and typeerror
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            coops.includes(d3.select(this).attr("name")) == false;
+                            return fadedArcs; 
+                            } else if (fb_profs != null){
                                 var fadedArcs = d3.select(this).attr("name") != current &&
-                                coops.includes(d3.select(this).attr("name")) == false;
+                                fb_profs.includes(d3.select(this).attr("name")) == false;
                                 return fadedArcs; 
-                                } else if (fb_profs != null){
-                                    var fadedArcs = d3.select(this).attr("name") != current &&
-                                    fb_profs.includes(d3.select(this).attr("name")) == false;
-                                    return fadedArcs; 
                                 }
                                 else { 
-                                    console.log(fb_profs)
+                                    //console.log(fb_profs)
                                     var fadedArcs = d3.select(this).attr("name") != current;
-                                    console.log("No cooperations or fb_profs found");
+                                    //console.log("No cooperations or fb_profs found");
                                     return fadedArcs;
                                 };
                             })
-                            .style('opacity', 0.3)
+                    .style('opacity', 0.3)
                 ;  
                 d3.selectAll(".nameText")
                     .style('opacity', 0.99)
@@ -466,111 +543,46 @@ d3.json("./data/unidata.json").then(function(data){
                 .style('opacity', 0.3) 
             } 
 
-
-        // text formatting arc clicked  
-        
         d3.select("#details").selectAll("#text").remove();
         d3.select("#details").selectAll("a").remove();
         d3.select("#details").selectAll("image").remove();
 
-            var i = 0;
-            var linesCount;
-            var lineCountDictionary = [];
+        /* ----------- Text-formatting Itemdetails ARC click-event------ */
+        var i = 0;
+        var linesCount;
+        var totalLinesCount = 0;
 
-            var hadMoreThanOneLiners = function(i){
-                for (var j = 0; j < i; j++){
-                    if (lineCountDictionary[j] >= 2) {                       
-                        return true;
+       // print each the content of each data-entry-key below each other
+        function formatItemDetails(){for (var key in d.data) {
+            if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
+                i = i + 1;
+                var tooltipRow = tooltipDetails.append("g")           
+                .attr("transform", function(){
+                    if ( key == "link"){
+                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
+                    }else{
+                        return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
                     }
-            }
-            return false;
-        }  
-            for (var key in d.data) {
-                if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
-                    i = i + 1;
-                    var linkDistance = 15;
-                    var tooltipRow = tooltipDetails.append("g")           
-        
-                        .attr("transform", function(){
-                            if //check if there has been a multiliner in headline
-                            (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
-                                console.log( key + " headline was twoliner")
-                                if ( key == "link"){
-                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * lineCountDictionary[i-2]))) + ")"
-                                }else {
-                                  return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"  
-                                }} 
-                            else if //previous one more than one line and two line headline
-                                (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
-                                    console.log( key + " previous had more lines and two line headline")
-                                    if (key == "link"){
-                                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (20 * lineCountDictionary[i-2]))) + ")"
-                                    } else {
-                                      return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")" 
-                                    }
-                                } else if //check if there has been a multiliner and headline two liner
-                            (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
-                                console.log( key + " any line before was Moreliner and twoline headline")
-                                if (key == "link"){
-                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * (Math.max(...lineCountDictionary))))) + ")"
-                                } else {
-                                   return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
-                                }
-                            } else if //check if there has been a multiliner and previous one as well
-                            (hadMoreThanOneLiners(i-2) == true && lineCountDictionary[i-2] > 1){ 
-                                console.log( key + " any line + previous before was Moreliner ")       
-                                if (key == "link"){
-                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
-                                } else {
-                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"  
-                                }
-                            } else if //previous one more than one line
-                            (lineCountDictionary[i-2] > 1 ){ 
-                                console.log( key + " previous had more lines")
-                                if (key == "link"){
-                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2]))) + ")"
-                                }else {
-                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")"  
-                                } 
-                            } else if //check if there has been a multiliner
-                            (hadMoreThanOneLiners(i) == true){ 
-                                console.log( key + " any line before was Moreliner")
-                                if (key == "link"){
-                                    return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
-                                } else {
-                                  return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")" 
-                                }      
-                            } else if // if link and no multiliners
-                            (i - 1 != 0 && key == "link") { 
-                               console.log( key + " simple")
-                               return "translate(0, " + (((i-1) * 20 + linkDistance)) + ")"  
-                            }else if //not the headline and no multliners
-                            (i - 1 != 0) { 
-                               console.log( key + " simple")
-                               return "translate(0, " + (((i-1) * 20)) + ")"  
-                            }
-                        
-                        })
-                        ;
+                });
 
-                    tooltipRow.append("text")
+                tooltipRow.append("text")
                         .attr("id", "text")
                         .attr("x", -20)
                         .attr("y", 15)
                         .attr("text-anchor", "start")
                         .style("font-size", "15px")
                         .text("")
-                    ; 
+                ; 
                     
-                    if (key == "link"){
-                        //console.log(d.data[key])
-                        var url = d.data[key]
-                        tooltipRow.append("a")
-                            .attr("xlink:href", function(d){return url;})
-                            .append("text")
-                            .text(function(d) {return url;})
-                            .style("font-size", "15px")  
-                            .style("fill", "blue")
+                if (key == "link"){
+                    //console.log(d.data[key])
+                    var url = d.data[key]
+                    tooltipRow.append("a")
+                        .attr("xlink:href", function(d){return url;})
+                        .append("text")
+                        .text(function(d) {return url;})
+                        .style("font-size", "15px")  
+                        .style("fill", "blue")
                     } else if (key == "bild"){
                         var filepath = d.data[key]
                         tooltipRow.append("image")
@@ -580,42 +592,54 @@ d3.json("./data/unidata.json").then(function(data){
                          console.log(filepath) 
                     } else {   
                     tooltipRow.select("text")
-                                .style("font-size", function(){
-                                    if (key == "name"){
-                                        return "18px";
-                                    }else {
-                                        return "15px";
-                                    }
-                                })
-                                .attr("fill", function() {
-                                    if (key == "name"){
-                                        return colorRingFunction(d.ringIndex);
-                                    }})
-                                .style("font-weight", function(){
-                                    if (key == "name"){
-                                        return "600";
-                                    
-                                }})
-                                .text(function(){
-                                        if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
-                                            return key + ": " + d.data[key]   
+                        .style("font-size", function(){
+                            if (key == "name"){
+                                return "18px";
+                            }else {
+                                return "15px";
+                            }
+                        })
+                        .attr("fill", function() {
+                            if (key == "name"){
+                                return colorRingFunction(d.ringIndex);
+                            }})
+                            .style("font-weight", function(){
+                                if (key == "name"){
+                                    return "600";    
+                                }
+                            })
+                            .text(function(){
+                                if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren" || key == "Budget"){
+                                    if (language == "deutsch"){
+                                        return key + ": " + d.data[key] 
+                                    } else {
+                                        if (key == "Kooperationspartner"){
+                                            return "Cooperations: " + d.data[key]; 
+                                        } else if (key == "Forschungsbereichsprofessuren"){
+                                            return "Professorships: " + d.data[key];
                                         }
-                                        return d.data[key]               
-                                })
-                                .each(function(d){
-                                    linesCount = wrap(this, 220, 0)
-                                    //console.log( key + linesCount)
-                                    lineCountDictionary.push(linesCount);
-                                })
-                    }
-                    
-            }
-            
+                                    } 
+                                }
+                                return d.data[key]               
+                            })
+                            .each(function(d){
+                                linesCount = wrap(this, 240, 0)
+                                console.log( key + linesCount)
+                                totalLinesCount = totalLinesCount + linesCount;
+                                console.log(totalLinesCount)
+                            })
+                    }      
             }   
-        })
-    ;
+        } 
+        }
+        
+        formatItemDetails();  
+    });
 
- 
+ /* ---------------------------------- */
+
+ /* ------------ formatting text-labels on arc ---- */
+
     // Invisible arc to prevent text on standing overhead
     gs.selectAll("hiddenPath")
         .data(function(d,i) {       
@@ -649,18 +673,16 @@ d3.json("./data/unidata.json").then(function(data){
                     if(newStart != null && newEnd != null && middleSec != null) {
                         var modifiedHiddenArc = "M" + newStart[1].substring(1) + "A" + middleSec[1] + "0,0,0," + newEnd[1];
                         return modifiedHiddenArc;
-                    }
-                    else
+                    } else
                         return newHiddenArc;
-                }//if
-                else
+                } else
                     return newHiddenArc;
             }
         )
         .attr("fill", "none");
 
     var lineconstant;
-        
+       
     // text wrap function
     function wrap(text2, width, ringIndex) {
         var text = d3.select(text2),
@@ -675,23 +697,24 @@ d3.json("./data/unidata.json").then(function(data){
                         .attr("x", 0) 
                         .attr("y", y) 
         while (word = words.pop()) {
-        line.push(word)
-        tspan.text(line.join(" "))
-        if (tspan.node().getComputedTextLength() > width) {
-            line.pop()
+            line.push(word)
             tspan.text(line.join(" "))
-            line = [word]
-            tspan = text.append("tspan")
-                        .attr("x", 0) 
-                        .attr("y", y) 
-                        .attr("dy", ++lineconstant * lineHeight + "em")
-                        .text(word)
-        }
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop()
+                tspan.text(line.join(" "))
+                line = [word]
+                tspan = text.append("tspan")
+                            .attr("x", 0) 
+                            .attr("y", y) 
+                            .attr("dy", ++lineconstant * lineHeight + "em")
+                            .text(word)
+            }
         }
         // +1 because if there are no tspans word itself is a line
         return lineconstant + 1;
     }
 
+    // Code for calculating the text-font-size accoring to number of items
     //calculating the font-size when number of elemnts changes in the rings
     var startItemNumbers = [0, 37, 2, 8, 12, 13, 3],
     currentRingItemCount = arcRingIndexSizeDictionary,
@@ -702,8 +725,6 @@ d3.json("./data/unidata.json").then(function(data){
     r4_FontSize = outerRingstxt_size,
     r5_FontSize = outerRingstxt_size,
     r6_FontSize = outerRingstxt_size;
-
-
 
     function decrease(ringFS){
         var newFontSize = ringFS - (itemDiff * pxChange);
@@ -729,10 +750,10 @@ d3.json("./data/unidata.json").then(function(data){
 
     var getFontSize = function(i){
         if (currentRingItemCount[i] < startItemNumbers[i]){
-            console.log("Items in ring" + i + " decreased")
+            //console.log("Items in ring" + i + " decreased")
             return noChange(i);
         } else if (currentRingItemCount[i] > startItemNumbers[i]) {
-            console.log("Items in ring" + i + " increased")
+            //console.log("Items in ring" + i + " increased")
             itemDiff = currentRingItemCount[i] - startItemNumbers[i]; 
             if (currentRingItemCount[i] > maxItems){
                 return nochange(i);
@@ -761,9 +782,9 @@ d3.json("./data/unidata.json").then(function(data){
             }  
             
         } else if (currentRingItemCount[i] == startItemNumbers[i]){
-            console.log("Items in ring" + i + " stayed the same")
+            //console.log("Items in ring" + i + " stayed the same")
             return noChange(i);
-    }
+        }
     }
 
     function getNewFontSizeArray(){
@@ -776,7 +797,8 @@ d3.json("./data/unidata.json").then(function(data){
             return newTextFonts;    
     }
     getNewFontSizeArray();
-            
+     
+    /* ------------- Arclabel-Text ---------*/
     // Placing text
     gs.selectAll(".nameText")
         .data(function(d,i) {       
@@ -792,46 +814,48 @@ d3.json("./data/unidata.json").then(function(data){
             .attr("xlink:href",function(d, i, array){
                 if (d.ringIndex > 1) 
                     {return "#" + d.data.name + "textArc_"+i} 
-                else{
-                    return "#" + d.data.name + "nameArc_"+i+i;   }
-                ;
+                else {
+                    return "#" + d.data.name + "nameArc_"+i+i;
+                };
         })
         .style("text-anchor", function(d, i){
-                var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];    
-	            if(d.ringIndex == 1 && i <= ringItemCount/2)
-	                    return "start"; 
-                if (d.ringIndex > 1) {
-                   return "middle"; 
-                }   
-                else {
-                    return "start";
-                }})
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];    
+	        if(d.ringIndex == 1 && i <= ringItemCount/2)
+	            return "start"; 
+            if (d.ringIndex > 1) {
+                return "middle"; 
+            } else {
+                return "start";
+            }
+        })
         .attr("startOffset", function(d, i){ 
             if(d.ringIndex == 1 && i <= ringItemCount/2) 
 	            return "50%"; 
-                if(d.ringIndex == 1) return "12%";   
-                var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
-                if(i > ringItemCount/4 && i < ringItemCount * 3/4)
-                    return "17%"; 
-                return "25%";
-            })      
+            if(d.ringIndex == 1) 
+                return "12%";   
+            var ringItemCount = arcRingIndexSizeDictionary[d.ringIndex];
+            if(i > ringItemCount/4 && i < ringItemCount * 3/4)
+                return "17%"; 
+            return "25%";
+        })      
         .attr("textName", function(d) {
             return d.data.name
         })
         .attr("textCoop", function(d) {
-        return d.data.Kooperationspartner
+            return d.data.Kooperationspartner
         })
         .attr("text_fb_profs", function(d) {
             return d.data.Forschungsbereichsprofessuren
-            })
+        })
         .text(function(d, i, array){ 
-            if (d.ringIndex > 0)
-            {return d.data.name};
-            })
-            .style('font-family', 'arial')
-            .attr('font-size', function(d){
-                return fontSizeSettings(d);
-                })
+            if (d.ringIndex > 0){
+                return d.data.name
+            };
+        })
+        .style('font-family', 'arial')
+        .attr('font-size', function(d){
+            return fontSizeSettings(d);
+        })
         .each(function(d) {
             if (d.ringIndex == 1){
                 var lineNo = wrap(this, 100, d.ringIndex); // doesnt do anything
@@ -840,12 +864,12 @@ d3.json("./data/unidata.json").then(function(data){
             arcLineCountDictionary[d.data.name] = lineNo;
         })
         .on("mouseover", function(d){    
-                d3.select(this).style("cursor", "pointer")
-                return tip.show(d, this)
+            d3.select(this).style("cursor", "pointer")
+            return tip.show(d, this)
             })
         .on("mouseout", function(d){
-                d3.select(this).style("cursor", "default")
-                return tip.hide(d, this)
+            d3.select(this).style("cursor", "default")
+            return tip.hide(d, this)
             }) 
         .on("click", function(d){
             var current = d3.select(this).attr("textName");
@@ -854,38 +878,39 @@ d3.json("./data/unidata.json").then(function(data){
        
             //reset to normal 
             if (d3.select(this).style("font-weight") == 700){ 
-                    d3.select("#details").selectAll("#text").remove();
-                    d3.select("#details").selectAll("a").remove();
-                    d3.select("#details").selectAll("image").remove();
-                    console.log("text: reset to normal")
-                    d3.selectAll("path").style('opacity', 1)
-                    d3.selectAll(".nameText").style('opacity', 1)
-                    d3.selectAll(".nameText").style('font-weight', "normal")
-                    return;}
+                d3.select("#details").selectAll("#text").remove();
+                d3.select("#details").selectAll("a").remove();
+                d3.select("#details").selectAll("image").remove();
+                console.log("text: reset to normal")
+                d3.selectAll("path").style('opacity', 1)
+                d3.selectAll(".nameText").style('opacity', 1)
+                d3.selectAll(".nameText").style('font-weight', "normal")
+                return;
+            }
 
             // filter, change opa of the items that are not selected
             else if (d3.select(this).style("font-weight") == 400) { 
-                    console.log("make bold and highlight")
-                    d3.selectAll("path").style("opacity", 0.99)
-                            .filter(function(d) {
-                                if (coops != null){  
-                                    //console.log("text: coops")
-                                    var fadedArcs = d3.select(this).attr("name") != current &&
-                                    coops.includes(d3.select(this).attr("name")) == false;                          
-                                    return fadedArcs; 
-                                } else if (fb_profs != null){
-                                    //console.log("text: profs")
-                                    var fadedArcs = d3.select(this).attr("name") != current &&
-                                    fb_profs.includes(d3.select(this).attr("name")) == false;                          
-                                    return fadedArcs; 
-                                } else { 
-                                    var fadedArcs = d3.select(this).attr("name") != current;
-                                    console.log("text: no coops or no profs");   
-                                    return fadedArcs;
-                                };
-                            })
-                .style('opacity', 0.3)
-                ;
+                //console.log("make bold and highlight")
+                d3.selectAll("path").style("opacity", 0.99)
+                    .filter(function(d) {
+                        if (coops != null){  
+                            //console.log("text: coops")
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            coops.includes(d3.select(this).attr("name")) == false;                          
+                            return fadedArcs; 
+                        } else if (fb_profs != null){
+                            //console.log("text: profs")
+                            var fadedArcs = d3.select(this).attr("name") != current &&
+                            fb_profs.includes(d3.select(this).attr("name")) == false;                          
+                            return fadedArcs; 
+                        } else { 
+                            var fadedArcs = d3.select(this).attr("name") != current;
+                            //console.log("text: no coops or no profs");   
+                            return fadedArcs;
+                        };
+                    })
+                .style('opacity', 0.3);
+
                 d3.selectAll(".nameText").style("opacity", 0.99)
                 .filter(function(d){
                     if (coops != null){ 
@@ -897,8 +922,8 @@ d3.json("./data/unidata.json").then(function(data){
                     } else {
                         return d.data.name != current
                     }
-            }).style('opacity', 0.3)
-        }
+                }).style('opacity', 0.3)
+            }
 
         d3.selectAll(".nameText").filter(function(d){
             return d.data.name == current
@@ -907,154 +932,100 @@ d3.json("./data/unidata.json").then(function(data){
             return d.data.name != current
         }).style("font-weight", "normal")
         
-        //tooltipdetails
+        /* ----------------formatting Itemdetails Text - TEXT clicked event---------*/
+
         d3.select("#details").selectAll("#text").remove();
         d3.select("#details").selectAll("a").remove();
         d3.select("#details").selectAll("image").remove();
         var i = 0;
         var linesCount;
-        var lineCountDictionary = [];
+        var totalLinesCount = 0;
 
-        var hadMoreThanOneLiners = function(i){
-            for (var j = 0; j < i; j++){
-                if (lineCountDictionary[j] >= 2) {                       
-                    return true;
-                }
-        }
-        return false;
-        }
+        function formatItemDetails(){if (key == "link"){
+            //console.log(d.data[key])
+            var url = d.data[key]
+            tooltipRow.append("a")
+                .attr("xlink:href", function(d){return url;})
+                .append("text")
+                .text(function(d) {return url;})
+                .style("font-size", "15px")
+                .style("fill", "blue")
+        } else if (key == "bild"){
+            var filepath = d.data[key]
+            tooltipRow.append("image")
+                 .attr('width', 200)
+                 .attr('y', imgDistance)
+                 .attr("xlink:href", filepath)
+                 //console.log(filepath)
+        } else {
+            tooltipRow.select("text")
+                .style("font-size", function(){
+                    if (key == "name"){
+                        return "18px";
+                    }else {
+                        return "15px";
+                    }
+                })
+                .attr("fill", function() {
+                    if (key == "name"){
+                        return colorRingFunction(d.ringIndex);
+                        }
+                })
+                .style("font-weight", function(){
+                    if (key == "name"){
+                        return "600";   
+                    }
+                })
+                .text(function(){
+                    if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
+                        if (language == "deutsch"){
+                            return key + ": " + d.data[key] 
+                        } else {
+                            if (key == "Kooperationspartner"){
+                                return "Cooperations: " + d.data[key]; 
+                            } else if (key == "Forschungsbereichsprofessuren"){
+                                return "Professorships: " + d.data[key];
+                            }
+                        }
+                          
+                    }
+                    return d.data[key]               
+                })
+                .each(function(d){
+                    linesCount = wrap(this, 240, 0)
+                    //console.log( key + linesCount)
+                    totalLinesCount = totalLinesCount + linesCount;
+                    //console.log(totalLinesCount)
+                })
+        }}
+
         for (var key in d.data) {
             if (d.data[key] != "" && d.data[key] != null && d.data[key].length != 0){
                 i = i + 1;
-                var linkDistance = 15;
                 var tooltipRow = tooltipDetails.append("g")
-        // text formatting text clicked
-                .attr("transform", function(){
-                    if //check if there has been a multiliner in headline
-                    (hadMoreThanOneLiners(i) == true && i - 1 == 1){ 
-                        console.log( key + " headline was twoliner")
-                        if ( key == "link"){
-                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * lineCountDictionary[i-2]))) + ")"
-                        }else {
-                          return "translate(0, " + ((((i-1) * 20 ) + (10 * lineCountDictionary[i-2]))) + ")"  
-                        }} 
-                    else if //previous one more than one line and two line headline
-                        (lineCountDictionary[0] > 1 && lineCountDictionary[i-2] > 1){ 
-                            console.log( key + " previous had more lines and two line headline")
-                            if (key == "link"){
-                                return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (20 * lineCountDictionary[i-2]))) + ")"
-                            } else {
-                              return "translate(0, " + ((((i-1) * 20 ) + (20 * lineCountDictionary[i-2]))) + ")" 
-                            }
-                        } else if //check if there has been a multiliner and headline two liner
-                    (hadMoreThanOneLiners(i) == true && lineCountDictionary[0] > 1){ 
-                        console.log( key + " any line before was Moreliner and twoline headline")
-                        if (key == "link"){
-                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (10 * (Math.max(...lineCountDictionary))))) + ")"
-                        } else {
-                           return "translate(0, " + ((((i-1) * 20 ) + (10 * (Math.max(...lineCountDictionary))))) + ")" 
-                        }
-                    } else if //check if there has been a multiliner and previous one as well
-                    (hadMoreThanOneLiners(i-2) == true && lineCountDictionary[i-2] > 1){ 
-                        console.log( key + " any line + previous before was Moreliner ")       
-                        if (key == "link"){
-                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
-                        } else {
-                          return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"  
-                        }
-                    } else if //previous one more than one line
-                    (lineCountDictionary[i-2] > 1 ){ 
-                        console.log( key + " previous had more lines")
-                        if (key == "link"){
-                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2]))) + ")"
-                        }else {
-                          return "translate(0, " + ((((i-1) * 20 ) + (13 * lineCountDictionary[i-2]))) + ")"  
-                        } 
-                    } else if //check if there has been a multiliner
-                    (hadMoreThanOneLiners(i) == true){ 
-                        console.log( key + " any line before was Moreliner")
-                        if (key == "link"){
-                            return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (13 * lineCountDictionary[i-2] + ( 17 * lineCountDictionary[i-2])))) + ")"
-                        } else {
-                          return "translate(0, " + ((((i-1) * 20 ) + (13 * (Math.max(...lineCountDictionary))))) + ")" 
-                        }      
-                    } else if // if link and no multiliners
-                    (i - 1 != 0 && key == "link") { 
-                       console.log( key + " simple")
-                       return "translate(0, " + (((i-1) * 20 + linkDistance)) + ")"  
-                    }else if //not the headline and no multliners
-                    (i - 1 != 0) { 
-                       console.log( key + " simple")
-                       return "translate(0, " + (((i-1) * 20)) + ")"  
+                // text formatting text clicked
+                .attr("transform", function(){ 
+                    if ( key == "link"){
+                        return "translate(0, " + ((((i-1) * 20 ) + linkDistance + (11 * totalLinesCount))) + ")"
+                    }else{
+                        return "translate(0, " + ((((i-1) * 20 ) + (11 * totalLinesCount))) + ")"  
                     }
-                
-                })
-                    ;
+                });
+
                 tooltipRow.append("text")
                     .attr("id", "text")
                     .attr("x", -20)
                     .attr("y", 15)
                     .attr("text-anchor", "start")
                     .style("font-size", "15px")
-                    .text("")
-                ; 
-                 
-                
-                if (key == "link"){
-                    //console.log(d.data[key])
-                    var url = d.data[key]
-                    tooltipRow.append("a")
-                        .attr("xlink:href", function(d){return url;})
-                        .append("text")
-                        .text(function(d) {return url;})
-                        .style("font-size", "15px")
-                        .style("fill", "blue")
-                } else if (key == "bild"){
-                        var filepath = d.data[key]
-                        tooltipRow.append("image")
-                         .attr('width', 200)
-                         .attr('y', imgDistance)
-                         .attr("xlink:href", filepath)
-                         console.log(filepath)
-                } else {
-                tooltipRow.select("text")
-                            .style("font-size", function(){
-                                if (key == "name"){
-                                    return "18px";
-                                }else {
-                                    return "15px";
-                                }
-                            })
-                            .attr("fill", function() {
-                                if (key == "name"){
-                                    return colorRingFunction(d.ringIndex);
-                                }})
-                            .style("font-weight", function(){
-                                if (key == "name"){
-                                    return "600";
-                                
-                            }})
-                            .text(function(){
-                                    if (key == "Kooperationspartner" || key == "Forschungsbereichsprofessuren"){
-                                        return key + ": " + d.data[key]   
-                                    }
-                                    return d.data[key]               
-                            })
-                            .each(function(d){
-                                linesCount = wrap(this, 220, 0)
-                                //console.log( key + linesCount)
-                                lineCountDictionary.push(linesCount);
-                            })
-                }
+                    .text(""); 
+
+                formatItemDetails();
             }
-        
         }
-
-            
-            
-        })       
+    })       
         
-
+    /* ----------- formatting arc-label-text -------*/
     // Centralize everything
     gs.selectAll("text")
         .attr('dy', function(d, i, array){
@@ -1106,19 +1077,18 @@ d3.json("./data/unidata.json").then(function(data){
     }
     })
     
-
+    /* --------------- most inner circle -------*/
     // middle text
     gs.append("text")
         .attr("text-anchor", "middle")
         .attr('font-family', 'arial')
         .style('fill', 'white')
         .text("Human-Centered Complex Systems")
-        .attr('font-size', '10px') //doesnt do anything???
+        .attr('font-size', '10px') 
         .each(function(d){ 
             lineCount = wrap(this, 100, 0)
         })
     ;
-
 })
 
 

@@ -1,9 +1,21 @@
 
-{   "Leitsatz": [{"name": "Human-Centered Complex Systems"}],
+{   "Leitsatz": [
+        {   "name": "Human-Centered Complex Systems",
+            "Studienanfänger": "Studienanfänger: BSc/MSc/Promotion 403 / 236 / 33",
+            "Absolventen": "Absolventen: BSc/MSc/Promotion 220 / 183 / 14",
+            "Gesamt": "Studierende und Promovierende (Gesamt): ca. 2300 / ca. 160",
+            "Jahr": "Akademisches Jahr 2017",
+            "Professoren": "Professoren (W3-W2 / W1): 23 / 5, davon vorgezogen/temporär: 2 / 1, ahoi.digital: 6 / 5",
+            "Wiss. Mitarbeiter": "Wiss. Mitarbeiter (VZÄ): Etat/HSP 45 / 35, Drittmittel: 72, Stipendianten: 17",
+            "TVP": "TVP (VZÄ): 31",
+            "Stand": "Stand: 2015"
+
+        }],
     "Profs": [
         {
             "name": "Softwarekonstruktion",
             "profname": "Prof. A B",
+            "Langertext": ".",
             "Status": "Verfahren abgeschlossen",
             "Kooperationspartner": "Philosophie, TUHH, HAW, Projekt AB, PartnerA, Partner B, PartncrC, PartnerD", 
             "link": "https://www.uni-hamburg.de/",
@@ -574,8 +586,9 @@
     "Projekte": [
         {
             "name": "Projekt AB",
-            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte. Sollte in kurzer Form beschreiben worum es in dem Projekt geht",
-            "Budget": 20000,
+            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte. Sollte in kurzer Form beschreiben worum es in dem Projekt geht. Zu lange Beschreibung klann für Probelem sorgen. keine Ahnung was man da tun kann",
+            "Langertext": ".",
+            "Budget": "20000€",
             "Kooperationspartner": "Softwarekonstruktion, Informatik,Philosophie",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
@@ -584,7 +597,7 @@
         {
             "name": "Projekt BC",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
-            "Budget": 20000,
+            "Budget": "20000€",
             "Kooperationspartner": "Softwarekonstruktion, Informatik",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
@@ -592,7 +605,7 @@
         {
             "name": "Projekt CD",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
-            "Budget": 20000,
+            "Budget": "20000€",
             "Kooperationspartner": "ThSI, Geisteswissenschaften, TUHH, KNU, Rechtswissenschaften",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
@@ -600,23 +613,7 @@
         {
             "name": "Projekt DE",
             "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
-            "Budget": 20000,
-            "Kooperationspartner": "Sicherheit",
-            "link": "https://www.uni-hamburg.de/",
-            "bild": ""
-        },      
-        {
-            "name": "Projekt EF",
-            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
-            "Budget": 20000,
-            "Kooperationspartner": "Sicherheit",
-            "link": "https://www.uni-hamburg.de/",
-            "bild": ""
-        },      
-        {
-            "name": "Projekt FG",
-            "Projektbeschreibung": "Projektbeschreibung in Fließtext oder Stichpunkte",
-            "Budget": 20000,
+            "Budget": "20000€",
             "Kooperationspartner": "Sicherheit",
             "link": "https://www.uni-hamburg.de/",
             "bild": ""
