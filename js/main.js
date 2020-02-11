@@ -403,7 +403,7 @@ d3.json(dataFile).then(function(data){
 
 /* ------------------------------------------ */
 
-    //tooltipdetails init
+    //itemdetails init
     var tooltipDetails = svg.append("g")
                             .attr("transform", "translate(" + (width - 560) + 
                             "," + (height - 1420) + ")")
